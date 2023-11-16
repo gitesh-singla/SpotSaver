@@ -132,6 +132,7 @@ app.post('/addlisting', (req, res) => {
                     ...data,
                     city,
                     owner: _id,
+                    createdAt: new Date(),
                     phone,
                 })
                 res.json(newSpot)
