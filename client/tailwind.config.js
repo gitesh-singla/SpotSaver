@@ -12,6 +12,7 @@ export default {
         'white': '#ffffff',
         'gray': '#343a40',
         'lightgray': '#4d4d4d',
+        'tblue': '#2963a3',
       },
     },
   },

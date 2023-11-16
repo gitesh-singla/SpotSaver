@@ -8,9 +8,11 @@ const cookieParser = require('cookie-parser')
 require('dotenv').config()
 const Users = require('./models/Users')
 const Spots = require('./models/Spots')
+const Bookings = require('./models/Bookings')
 const distance = require('./functions/distanceFunction')
 const coordinatesToCity = require('./functions/coordsToCity')
 const { default: axios } = require('axios')
+const checkAvailability = require('./functions/checkAvailability');
 
 
 const app = express()
@@ -132,6 +134,7 @@ app.post('/addlisting', (req, res) => {
                     ...data,
                     city,
                     owner: _id,
+                    createdAt: new Date(),
                     phone,
                 })
                 res.json(newSpot)
@@ -166,20 +169,64 @@ app.get('/listing/', async (req, res) => {
         const spotData = await Spots.findOne({ _id: id }).lean()
         const { name, phone } = await Users.findOne({ _id: spotData.owner })
         let response = { ...spotData, name, phone }
-        if (lat!=0 && lon!=0) {
+        if (lat != 0 && lon != 0) {
             const origin = [lon, lat]
             const dest = [spotData.location.lon, spotData.location.lat]
             console.log('requesting route');
             const { data } = await axios.get(`https://api.openrouteservice.org/v2/directions/driving-car?api_key=${process.env.ORS_API_KEY}&start=${origin}&end=${dest}`)
             const { duration, distance } = data.features[0].properties.segments[0]
             const coordinates = data.features[0].geometry.coordinates
-            response = {...response, duration, distance, coordinates}
+            response = { ...response, duration, distance, coordinates }
         }
         res.json(response)
     } catch (error) {
         res.status(422).json(error.message)
     }
 })
+
+app.post('/book', async (req, res) => {
+    const { spot, start, end } = req.body;
+    const { authToken } = req.cookies
+    if (authToken) {
+        jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
+            try {
+                if (err) throw err;
+                if (!spot || !start || !end || start >= end) {
+                    throw ("Invalid request");
+                }
+                if(start > new Date().setDate(new Date().getDate() + 6) || start < new Date()){
+                    throw ("Invalid request");
+                }
+                const spotExists = await Spots.findOne({ _id: spot });
+                if (spotExists) {
+                    const { slots } = spotExists;
+                    const available = await checkAvailability(spot, slots, start, end);
+                    if (available) {
+                        const bookingInfo = await Bookings.create({
+                            spot,
+                            createdAt: new Date(),
+                            client: jwtResponse._id,
+                            status: "active",
+                            start,
+                            end,
+                        })
+                        res.json(bookingInfo)
+                    } else {
+                        throw ("Spot unavailable at requested time.");
+                    }
+                } else {
+                    throw ("Spot does not exist.");
+                }
+            } catch (error) {
+                console.log(error);
+                res.status(422).json(error)
+            }
+        })
+    } else {
+        res.status(302).json('Not logged in.')
+    }
+})
+
 
 
 async function logSpots() {
