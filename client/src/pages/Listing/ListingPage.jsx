@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { userContext } from "../../UserContext";
 import ListMap from "../../components/ListMap";
 import { FadeLoader } from "react-spinners";
+import Booking from './Booking'
 
 export default function ListingPage() {
   const { id } = useParams();
@@ -48,12 +49,6 @@ export default function ListingPage() {
       <>
         <main className="absolute top-57 right-0 left-0 bottom-0 overflow-hidden">
           {/* filter */}
-          <div className="filter fixed bottom-0 left-0 z-30 m-[1.25em] block w-[70%]">
-            <button className="py-[0.625em] px-[2.5em] rounded-md flex items-center bg-[#2963a3] text-white my-0 mx-auto shadow-sh shadow-lg">
-              <img className="h-6" src="/filter-svg.svg" alt="#" />
-              <div className="text-2xl pl-[0.25em]">Filter</div>
-            </button>
-          </div>
           <div className="divide w-full flex">
             <section
               id="map-sec"
@@ -72,7 +67,7 @@ export default function ListingPage() {
 
             <section
               id="list-sec"
-              className="w-[450px] h-full fixed top-[57px] right-0 z-10 bg-[#f9f9f9] "
+              className="w-[450px] h-full fixed top-[57px] right-0 z-10 bg-[#f9f9f9] overflow-y-auto "
             >
               <div className="bg-[#2963a3] h-16 text-white text-2xl text-center leading-[64px] font-bold">
                 {spot.address}
@@ -95,6 +90,9 @@ export default function ListingPage() {
                 {spot.duration && <div className="border-b-4 border-blue-500">
                   ETA: {(spot.duration / 60).toFixed(2)}min
                 </div>}
+                <div>
+                  <Booking />
+                </div>
               </div>
             </section>
           </div>
