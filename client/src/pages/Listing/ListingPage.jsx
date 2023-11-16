@@ -35,7 +35,6 @@ export default function ListingPage() {
     try {
       const { data } = await axios.get(url);
       setSpot(data);
-      console.log(data);
     } catch (error) {
       console.log('in getData()', error.message);
     }
