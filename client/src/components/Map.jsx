@@ -34,18 +34,21 @@ const RecenterAutomatically = ({location}) => {
  }
 
  const customIcon = L.icon({
-  iconUrl: 'map-marker.png',
-  iconSize: [48, 48],
-  iconAnchor: [24, 40], // Anchor point of the icon (center-bottom)
-  className: "hover:scale-105"
+  iconUrl: '/map-marker.png',
+  iconSize: [36, 36],
+  iconAnchor: [18, 30], // Anchor point of the icon (center-bottom)
+});
+
+const hoverIcon = L.icon({
+  iconUrl: '/map-marker.png',
+  iconSize: [42, 42],
+  iconAnchor: [21, 36], // Anchor point of the icon (center-bottom)
 });
 
 const userIcon = L.icon({
-  iconUrl: 'user-marker.png',
-  color: "red",
+  iconUrl: '/user-marker.png',
   iconSize: [24, 24],
   iconAnchor: [12, 24],
-  
 })
 
 const CustomMarker = ({position}) => (
