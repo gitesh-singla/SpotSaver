@@ -150,17 +150,23 @@ app.post('/addlisting', (req, res) => {
 
 
 app.get('/listings', async (req, res) => {
-    const { lon, lat, city } = req.query
-    const allSpots = await Spots.find({ city: city }).lean()
-    // console.log(allSpots)
-    const spots = allSpots.map(spot => {
-        return {
-            ...spot,
-            distance: distance(lat, lon, spot.location.lat, spot.location.lon).toFixed(2)
-        }
-    })
-    //console.log(spots);
-    res.json(spots)
+    try {
+        const { lon, lat, city, startTime, endTime } = req.query;
+        const allSpots = await Spots.find({ city: city }).lean()
+        let spots = await Promise.all(allSpots.map(async spot => {
+            const available = await checkAvailability(spot._id, spot.slots, startTime, endTime);
+            return {
+                ...spot,
+                distance: distance(lat, lon, spot.location.lat, spot.location.lon).toFixed(2),
+                available,
+            }
+        }));
+        spots = spots.filter(spot => spot.available)
+        res.json(spots)
+    } catch (error) {
+        console.log(error);
+        res.status(402).json(error);
+    }
 })
 
 app.get('/listing/', async (req, res) => {
@@ -194,7 +200,7 @@ app.post('/book', async (req, res) => {
                 if (!spot || !start || !end || start >= end) {
                     throw ("Invalid request");
                 }
-                if(start > new Date().setDate(new Date().getDate() + 6) || start < new Date()){
+                if (start > new Date().setDate(new Date().getDate() + 6) || start < new Date()) {
                     throw ("Invalid request");
                 }
                 const spotExists = await Spots.findOne({ _id: spot });
