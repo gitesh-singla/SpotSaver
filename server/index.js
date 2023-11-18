@@ -42,7 +42,7 @@ runMongo();
 
 app.post('/register', async (req, res) => {
     const { name, email, phone, password } = req.body
-    console.log(name, email, phone, password);
+    //console.log(name, email, phone, password);
     try {
         const userExists = await Users.findOne({ email: email })
         if (!userExists) {
@@ -69,7 +69,7 @@ app.post('/login', async (req, res) => {
 
     try {
         const userExists = await Users.findOne({ email: email })
-        console.log(userExists);
+        //console.log(userExists);
         if (userExists) {
             const passwordValid = bcrypt.compareSync(password, userExists.password)
 
@@ -77,8 +77,8 @@ app.post('/login', async (req, res) => {
                 jwt.sign({ email: userExists.email, _id: userExists._id }, jwtKey, {}, (error, token) => {
                     try {
                         if (error) throw error
-                        const { name, email, _id } = userExists
-                        res.cookie('authToken', token).json({ name, email, _id })
+                        const { name, email, _id, phone } = userExists
+                        res.cookie('authToken', token).json({ name, email, _id, phone })
                     } catch (error) {
                         console.log(error);
                         res.status(422).json(error.message)
@@ -103,8 +103,8 @@ app.get('/auth', (req, res) => {
         jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
             try {
                 if (err) throw err;
-                const { name, email, _id } = await Users.findById(jwtResponse._id)
-                res.json({ name, email, _id });
+                const { name, email, _id, phone } = await Users.findById(jwtResponse._id)
+                res.json({ name, email, _id, phone });
             } catch (error) {
                 console.log(error)
                 res.status(422).json(error.message)
@@ -233,13 +233,58 @@ app.post('/book', async (req, res) => {
     }
 })
 
+app.get('/myspots', async (req, res) => {
+    const { authToken } = req.cookies
+    if (authToken) {
+        jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
+            try {
+                if (err) throw err;
+                const spots = await Spots.find({owner: jwtResponse._id});
+                res.json(spots)
+            } catch (error) {
+                console.log(error);
+                res.status(422).json(error.message)
+            }
+        })
+    } else {
+        res.status(302).json('not logged in')
+    }
+})
 
+app.get('/reservations', async (req, res) => {
+    const { authToken } = req.cookies
+    console.log("reservations requested");
+    if (authToken) {
+        jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
+            try {
+                if (err) throw err;
+                const reservations = await Bookings.find({client: jwtResponse._id}).lean();
+                console.log("reservations: ", reservations.length);
+                const resInfo = await Promise.all(reservations.map(async reservation => {
+                    let spotInfo = await Spots.findOne({_id: reservation.spot}).lean();
+                    console.log("logging spotinfo", spotInfo);
+                    return {
+                        ...reservation,
+                        address: spotInfo.address,
+                        description: spotInfo.description,
+                        phone: spotInfo.phone,
+                        cost: spotInfo.price,
+                    }
+                }));
+                res.json(resInfo)
+            } catch (error) {
+                console.log(error);
+                res.status(422).json(error.message)
+            }
+        })
+    } else {
+        res.status(302).json('not logged in')
+    }
+})
 
 async function logSpots() {
     const data = await Spots.find({});
     console.log(data);
 }
-
-
 // logSpots()
 

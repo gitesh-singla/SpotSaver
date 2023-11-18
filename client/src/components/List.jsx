@@ -1,13 +1,15 @@
 import { Link, Navigate } from "react-router-dom";
 
-function List({ distance, address, _id, slots, price }) {
-
+function List({ distance, address, _id, slots, price, setHoveredIndex, hoveredIndex,  index }) {
+  const hoverClass = `list-cards shadow-sh rounded-lg block w-[95%] bg-white relative m-[0.625em] p-[0.625em] duration-300 ${index == hoveredIndex ? 'scale-105' : ''}`;
 
   return (
     <>
       <Link
-        className="list-cards shadow-sh rounded-lg block w-[95%] bg-white relative m-[0.625em] p-[0.625em] hover:scale-105 duration-300"
+        className={hoverClass}
         to={`/listing/${_id}`}
+        onMouseEnter={() => setHoveredIndex(index)}
+        onMouseLeave={() => setHoveredIndex(null)}
       >
         <div className="list-card-header bg-[#2963a3] text-white flex justify-between p-[0.625em] rounded-md ">
           <div className="list-card-title text-xl font-semibold">{address}</div>

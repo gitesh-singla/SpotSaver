@@ -9,6 +9,7 @@ function Search() {
   const [spots, setSpots] = useState([]);
   const [city, setCity] = useState("");
   const [pincode, setPincode] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const { lat, setLat, lon, setLon } = useContext(userContext);
   const { selectedDate, startTime, endTime } = useContext(DateContext);
@@ -21,6 +22,9 @@ function Search() {
     if (!lat || !lon) getLocation();
     coordinatesToCity(lat, lon);
   }, []);
+  useEffect(() => {
+    console.log(hoveredIndex);
+  }, [hoveredIndex]);
 
   function getLocation() {
     if ("geolocation" in navigator) {
@@ -111,7 +115,7 @@ function Search() {
             <div className="Get-location w-[440px] flex items-center">
               <img
                 className="h-[1.25rem]  flex justify-between "
-                src="./location-svg.svg"
+                src="/location-svg.svg"
                 alt=""
               />
               <button
@@ -123,7 +127,7 @@ function Search() {
               <span className="px-[0.5em]">OR </span>
               <img
                 className="h-[1.25rem] pr-[0.625em] flex justify-between"
-                src="./pincode-svg.svg"
+                src="/pincode-svg.svg"
                 alt=""
               />
               <input
@@ -141,7 +145,7 @@ function Search() {
             className="Search-button bg-[#f35141] h-[44px] w-[44x] mr-[1.25em] rounded-[50%] shadow-lg p-[0.75em]"
             onClick={getpinLoaction}
           >
-            <img className="h-[1.25rem]" src="./search-svg.svg" alt="" />
+            <img className="h-[1.25rem]" src="/search-svg.svg" alt="" />
           </div>
         </div>
         {/* filter */}
@@ -156,7 +160,12 @@ function Search() {
             id="map-sec"
             className="fixed top-[57px] right-0 left-0 bottom-[52px] w-full h-full z-0"
           >
-            <Map spots={spots} location={[lat, lon]} />
+            <Map
+              spots={spots}
+              location={[lat, lon]}
+              setHoveredIndex={setHoveredIndex}
+              hoveredIndex={hoveredIndex}
+            />
           </section>
 
           <section
@@ -185,7 +194,7 @@ function Search() {
             </header>
             <div className="listing-cards overflow-y-auto h-[80%] overflow-x-hidden">
               {spots &&
-                spots.map((spot) => {
+                spots.map((spot, index) => {
                   return (
                     <List
                       address={spot.address}
@@ -194,6 +203,9 @@ function Search() {
                       _id={spot._id}
                       key={spot._id}
                       price={spot.price}
+                      hoveredIndex={hoveredIndex}
+                      setHoveredIndex={setHoveredIndex}
+                      index={index}
                     />
                   );
                 })}

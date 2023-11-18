@@ -12,6 +12,8 @@ export default function Navbar() {
         {!user && <Link to={"/login"}>Login</Link>}
         {!user && <Link to={"/register"}>Register</Link>}
         {user && <Link to={"/profile"}>{user.name}</Link>}
+        {user && <Link to={"/myspots"}>My Spots</Link>}
+        {user && <Link to={"/reservations"}>My Reservations</Link>}
         <Link to={"/listings"}>Listings</Link>
         <Link to={"/create-listing"}>Add a Spot!</Link>
       </li>

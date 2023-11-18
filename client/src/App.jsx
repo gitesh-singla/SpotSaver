@@ -11,6 +11,8 @@ import Profile from "./pages/Profile/Profile";
 import ListingPage from "./pages/Listing/ListingPage";
 import { FadeLoader } from "react-spinners";
 import { useContext } from "react";
+import MySpots from "./pages/MySpots/MySpots";
+import Reservations from "./pages/Reservations/Reservations";
 
 function App() {
   const { ready } = useContext(userContext);
@@ -24,7 +26,9 @@ function App() {
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/register" element={<RegisterPage />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/listings" element={<Search />}></Route>
+          <Route path="/myspots" element={<MySpots />}></Route>
+          <Route path="/reservations" element={<Reservations />}></Route>
+          <Route path="/listings/" element={<Search />}></Route>
           <Route path="/create-listing" element={<CreateListing />}></Route>
           <Route path="/listing/:id" element={<ListingPage />}></Route>
         </Routes>
