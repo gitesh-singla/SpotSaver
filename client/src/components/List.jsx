@@ -7,7 +7,7 @@ function List({ distance, address, _id, slots, price, setHoveredIndex, hoveredIn
     <>
       <Link
         className={hoverClass}
-        to={`/listings/${_id}`}
+        to={`/listing/${_id}`}
         onMouseEnter={() => setHoveredIndex(index)}
         onMouseLeave={() => setHoveredIndex(null)}
       >

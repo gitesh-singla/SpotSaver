@@ -77,7 +77,7 @@ const userIcon = L.icon({
 const CustomMarker = ({ position, index, hoveredIndex, setHoveredIndex, _id }) => {
   const navigate = useNavigate();
   function redirectToSpot(){
-    navigate(`/listings/${_id}`)
+    navigate(`/listing/${_id}`)
   }
 
   return (

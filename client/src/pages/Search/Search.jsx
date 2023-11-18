@@ -109,7 +109,7 @@ function Search() {
             <div className="Get-location w-[440px] flex items-center">
               <img
                 className="h-[1.25rem]  flex justify-between "
-                src="./location-svg.svg"
+                src="/location-svg.svg"
                 alt=""
               />
               <button
@@ -121,7 +121,7 @@ function Search() {
               <span className="px-[0.5em]">OR </span>
               <img
                 className="h-[1.25rem] pr-[0.625em] flex justify-between"
-                src="./pincode-svg.svg"
+                src="/pincode-svg.svg"
                 alt=""
               />
               <input
@@ -139,7 +139,7 @@ function Search() {
             className="Search-button bg-[#f35141] h-[44px] w-[44x] mr-[1.25em] rounded-[50%] shadow-lg p-[0.75em]"
             onClick={getpinLoaction}
           >
-            <img className="h-[1.25rem]" src="./search-svg.svg" alt="" />
+            <img className="h-[1.25rem]" src="/search-svg.svg" alt="" />
           </div>
         </div>
         {/* filter */}
