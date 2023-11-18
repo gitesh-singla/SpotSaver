@@ -7,7 +7,7 @@ function List({ distance, address, _id, slots, price }) {
     <>
       <Link
         className="list-cards shadow-sh rounded-lg block w-[95%] bg-white relative m-[0.625em] p-[0.625em] hover:scale-105 duration-300"
-        to={`/listings/${_id}`}
+        to={`/listing/${_id}`}
       >
         <div className="list-card-header bg-[#2963a3] text-white flex justify-between p-[0.625em] rounded-md ">
           <div className="list-card-title text-xl font-semibold">{address}</div>

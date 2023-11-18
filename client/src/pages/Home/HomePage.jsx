@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import RangePicker from "./RangePicker";
+import { useContext } from "react";
+import { DateContext } from "../../DateContext";
 
 export default function HomePage() {
+  const {startTime, endTime} = useContext(DateContext);
+
   return (
     <>
       <div className=" bg-cover h-3/4 border-b-8 border-[#a0c5d8] border-solid">
@@ -23,14 +28,15 @@ export default function HomePage() {
             Let's get you parked and on to the bigger things.
           </p>
         </div>
-        <div className="find-parking text-white rounded-e  flex justify-center">
-          <button className="flex items-center justify-center px-8 py-4 bg-[#f2555c] shadow-xl border-[#f2555c] rounded-full mt-1 mb-4">
+        <div className="find-parking text-white rounded-e  flex flex-col items-center">
+          <Link className="flex items-center justify-center px-8 py-4 bg-[#f2555c] shadow-xl border-[#f2555c] rounded-full mt-1 mb-4"
+          to={"/listings"}>
             <img className="h-8" src="./direction-arrow.svg" alt="" />
             <p className="text-2xl font-bold text-white pl-4">
-              {" "}
-              <Link to={"/listings"}>Find parking near me</Link>
+              Find parking near me!
             </p>
-          </button>
+          </Link>
+          <RangePicker  />
         </div>
         <div></div>
       </div>

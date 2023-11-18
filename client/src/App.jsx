@@ -26,7 +26,7 @@ function App() {
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/listings" element={<Search />}></Route>
           <Route path="/create-listing" element={<CreateListing />}></Route>
-          <Route path="/listings/:id" element={<ListingPage />}></Route>
+          <Route path="/listing/:id" element={<ListingPage />}></Route>
         </Routes>
       )}
     </>

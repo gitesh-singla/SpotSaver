@@ -3,6 +3,7 @@ import List from "../../components/List";
 import Map from "../../components/Map";
 import axios from "axios";
 import { userContext } from "../../UserContext";
+import { DateContext } from "../../DateContext";
 
 function Search() {
   const [spots, setSpots] = useState([]);
@@ -10,6 +11,7 @@ function Search() {
   const [pincode, setPincode] = useState(0);
 
   const { lat, setLat, lon, setLon } = useContext(userContext);
+  const { selectedDate, startTime, endTime } = useContext(DateContext);
 
   useEffect(() => {
     searchSpots();
@@ -77,8 +79,12 @@ function Search() {
 
   async function searchSpots() {
     console.log("searching");
+    let start = new Date(startTime);
+    start = start.toISOString();
+    let end = new Date(endTime);
+    end = end.toISOString();
     const { data } = await axios.get(
-      `http://localhost:4000/listings?lat=${lat}&lon=${lon}&city=${city}`
+      `http://localhost:4000/listings?lat=${lat}&lon=${lon}&city=${city}&startTime=${start}&endTime=${end}`
     );
     setSpots(data);
   }
