@@ -8,6 +8,7 @@ function Search() {
   const [spots, setSpots] = useState([]);
   const [city, setCity] = useState("");
   const [pincode, setPincode] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const { lat, setLat, lon, setLon } = useContext(userContext);
 
@@ -19,6 +20,9 @@ function Search() {
     if (!lat || !lon) getLocation();
     coordinatesToCity(lat, lon);
   }, []);
+  useEffect(() => {
+    console.log(hoveredIndex);
+  }, [hoveredIndex]);
 
   function getLocation() {
     if ("geolocation" in navigator) {
@@ -150,7 +154,12 @@ function Search() {
             id="map-sec"
             className="fixed top-[57px] right-0 left-0 bottom-[52px] w-full h-full z-0"
           >
-            <Map spots={spots} location={[lat, lon]} />
+            <Map
+              spots={spots}
+              location={[lat, lon]}
+              setHoveredIndex={setHoveredIndex}
+              hoveredIndex={hoveredIndex}
+            />
           </section>
 
           <section
@@ -179,7 +188,7 @@ function Search() {
             </header>
             <div className="listing-cards overflow-y-auto h-[80%] overflow-x-hidden">
               {spots &&
-                spots.map((spot) => {
+                spots.map((spot, index) => {
                   return (
                     <List
                       address={spot.address}
@@ -188,6 +197,9 @@ function Search() {
                       _id={spot._id}
                       key={spot._id}
                       price={spot.price}
+                      hoveredIndex={hoveredIndex}
+                      setHoveredIndex={setHoveredIndex}
+                      index={index}
                     />
                   );
                 })}

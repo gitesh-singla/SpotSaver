@@ -32,7 +32,7 @@ function ListMap({ spot, location, coordinates }) {
           position={[spot.location.lat, spot.location.lon]}
           key={spot._id}
         />
-        {coordinates && <Polyline positions={coordinates} color="blue"/>}
+        {coordinates && <Polyline positions={coordinates} color="blue" />}
       </MapContainer>
     </section>
   );
@@ -40,8 +40,8 @@ function ListMap({ spot, location, coordinates }) {
 
 const customIcon = L.icon({
   iconUrl: "/map-marker.png",
-  iconSize: [48, 48],
-  iconAnchor: [24, 40], // Anchor point of the icon (center-bottom)
+  iconSize: [36, 36],
+  iconAnchor: [18, 30], // Anchor point of the icon (center-bottom)
 });
 
 const userIcon = L.icon({
