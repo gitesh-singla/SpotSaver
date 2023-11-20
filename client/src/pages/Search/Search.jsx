@@ -4,15 +4,16 @@ import Map from "../../components/Map";
 import axios from "axios";
 import { userContext } from "../../UserContext";
 import { DateContext } from "../../DateContext";
+import RangePicker from "./RangeModifier";
 
 function Search() {
   const [spots, setSpots] = useState([]);
   const [city, setCity] = useState("");
-  const [pincode, setPincode] = useState(0);
+  const [pincode, setPincode] = useState();
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const { lat, setLat, lon, setLon } = useContext(userContext);
-  const { selectedDate, startTime, endTime } = useContext(DateContext);
+  const { startTime, endTime } = useContext(DateContext);
 
   useEffect(() => {
     searchSpots();
@@ -109,44 +110,37 @@ function Search() {
   return (
     <>
       <main className="absolute top-57 right-0 left-0 bottom-0 overflow-hidden">
-        <div className="Search fixed w-[520px] h-[70px] top-[72px] left-[37px] flex justify-between items-center bg-white rounded-[2px] shadow-sh z-10 m-4">
+        <div className="Search fixed top-[72px] left-[37px] flex flex-col bg-white rounded-md shadow-sh z-10 m-4">
           {/* //searchCard */}
-          <div className="Search-details p-[0.625em]">
-            <div className="Get-location w-[440px] flex items-center">
+          <div className="Search-details p-2 px-4 flex felx-col gap-4 items-center justify-center">
+            <button
+              className="bg-primary p-3 rounded-full"
+              onClick={getLocation}
+            >
               <img
                 className="h-[1.25rem]  flex justify-between "
                 src="/location-svg.svg"
                 alt=""
               />
-              <button
-                className="bg-primary py-4 mx-2 px-2 rounded-md"
-                onClick={getLocation}
-              >
-                Get Location
-              </button>
-              <span className="px-[0.5em]">OR </span>
-              <img
-                className="h-[1.25rem] pr-[0.625em] flex justify-between"
-                src="/pincode-svg.svg"
-                alt=""
-              />
-              <input
-                type="text"
-                value={pincode}
-                onChange={(e) => setPincode(e.target.value)}
-                name="pincode"
-                id="pincode"
-                placeholder="Enter Pincode"
-                className="border-primary border-2 p-1"
-              ></input>
-            </div>
+            </button>
+            <span className="">OR</span>
+            <input
+              type="text"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+              name="pincode"
+              id="pincode"
+              placeholder="Enter Pincode"
+              className="border-primary border-2 p-1"
+            ></input>
+            <button
+              className="Search-button bg-[#f35141] p-3 rounded-full shadow-lg"
+              onClick={getpinLoaction}
+            >
+              <img className="h-[1.25rem]" src="/search-svg.svg" alt="" />
+            </button>
           </div>
-          <div
-            className="Search-button bg-[#f35141] h-[44px] w-[44x] mr-[1.25em] rounded-[50%] shadow-lg p-[0.75em]"
-            onClick={getpinLoaction}
-          >
-            <img className="h-[1.25rem]" src="/search-svg.svg" alt="" />
-          </div>
+          <RangePicker modifySearch={searchSpots}/>
         </div>
         {/* filter */}
         <div className="filter fixed bottom-0 left-0 z-30 m-[1.25em] block w-[70%]">

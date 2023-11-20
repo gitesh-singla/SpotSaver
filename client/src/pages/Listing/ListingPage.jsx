@@ -73,7 +73,7 @@ export default function ListingPage() {
               </div>
               <div className="listing-cards font-semibold text-lg overflow-y-auto h-[80%] overflow-x-hidden gap-4 mt-8 flex flex-col pl-4">
                 <div className="border-b-4 border-blue-500">
-                  Price: Rs 50 / Hour
+                  Price: Rs {spot.price} / Hour
                 </div>
                 <div className="border-b-4 border-blue-500">
                   Description:
@@ -90,7 +90,7 @@ export default function ListingPage() {
                   ETA: {(spot.duration / 60).toFixed(2)}min
                 </div>}
                 <div>
-                  <Booking />
+                  <Booking price={spot.price}/>
                 </div>
               </div>
             </section>

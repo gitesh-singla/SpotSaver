@@ -5,87 +5,94 @@ import "react-datepicker/dist/react-datepicker.css";
 import { userContext } from "../../UserContext";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { DateContext } from "../../DateContext";
 
-export default function Booking() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [startTime, setStartTime] = useState();
-  const [endTime, setEndTime] = useState();
-  const {user} = useContext(userContext);
+export default function Booking({ price }) {
+  const { selectedDate, startTime, endTime } = useContext(DateContext);
+  const cost = price * Math.abs(endTime.getHours() - startTime.getHours());
+  const { user } = useContext(userContext);
   const navigate = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
 
   async function handleBooking() {
-    if(!user){
-        navigate('/login');
-        return;
+    if (!user) {
+      navigate("/login");
+      return;
     }
     console.log("Booking pressed");
-    if(!selectedDate || !startTime || !endTime){
-        console.log("Fields empty");
-        return;
+    if (!selectedDate || !startTime || !endTime) {
+      console.log("Fields empty");
+      return;
     }
-    const date = selectedDate.getDate();
     const start = new Date(startTime);
-    start.setDate(date)
     const end = new Date(endTime);
-    end.setDate(date)
-    // console.log({date, start, end});
     try {
-        const bookingData = {
-            spot: id,
-            start,
-            end,
-        }
-        await axios.post('http://localhost:4000/book', bookingData, {withCredentials: true})
-        console.log("Booked");
-    } catch(error){
-        console.log(error.message);
+      const bookingData = {
+        spot: id,
+        start,
+        end,
+        amount: cost
+      };
+      await axios.post("http://localhost:4000/book", bookingData, {
+        withCredentials: true,
+      });
+      console.log("Booked");
+    } catch (error) {
+      console.log(error.message);
     }
+  }
+
+  function formatDateString(dateString) {
+    const options = {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+    };
+
+    const date = new Date(dateString);
+    return date.toLocaleString("en-IN", options);
+  }
+
+  function formatTimeString(dateString) {
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+    };
+
+    const date = new Date(dateString);
+    return date.toLocaleString("en-IN", options);
   }
 
   return (
     <div className="flex flex-col items-center gap-2">
       <div>
-        <h2>Select Date:</h2>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          minDate={new Date()}
-          maxDate={new Date().setDate(new Date().getDate() + 6)}
-          dateFormat="dd/MM/yyyy"
-          className="border-2 border-tblue"
-        />
+        <h2>Date: {formatDateString(selectedDate)}</h2>
       </div>
       <div>
-        <h2>Select Time of Arrival:</h2>
-        <DatePicker
-          selected={startTime}
-          onChange={(date) => setStartTime(date)}
-          showTimeSelect
-          showTimeSelectOnly
-          timeIntervals={60}
-          timeCaption="Time"
-          dateFormat="h:mm aa"
-          className="border-2 border-tblue"
-        //   minTime={new Date().setHours(new Date().getHours(), 0 , 0)}
-        //   maxTime={new Date().setHours(21, 0, 0)}
-        />
+        <h2>Time of Arrival: {formatTimeString(startTime)}</h2>
       </div>
       <div>
-        <h2>Select Time of Departure:</h2>
-        <DatePicker
-          selected={endTime}
-          onChange={(date) => setEndTime(date)}
-          showTimeSelect
-          showTimeSelectOnly
-          timeIntervals={60}
-          timeCaption="Time"
-          dateFormat="h:mm aa"
-          className="border-2 border-tblue"
-        />
+        <h2>Time of Departure: {formatTimeString(endTime)}</h2>
       </div>
-
-      <button onClick={handleBooking} className="bg-tblue py-2 px-6 rounded-md text-white">Book Now!</button>
+      <div>
+        <h2>Total Cost: Rs. {cost}</h2>
+      </div>
+      {!user && (
+        <button
+          onClick={handleBooking}
+          className="bg-tblue py-2 px-6 rounded-md text-white"
+        >
+          Login to Book
+        </button>
+      )}
+      {user && (
+        <button
+          onClick={handleBooking}
+          className="bg-tblue py-2 px-6 rounded-md text-white"
+        >
+          Book Now!
+        </button>
+      )}
     </div>
   );
 }
