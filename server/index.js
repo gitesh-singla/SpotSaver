@@ -191,7 +191,7 @@ app.get('/listing/', async (req, res) => {
 })
 
 app.post('/book', async (req, res) => {
-    const { spot, start, end } = req.body;
+    const { spot, start, end, amount } = req.body;
     const { authToken } = req.cookies
     if (authToken) {
         jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
@@ -215,6 +215,7 @@ app.post('/book', async (req, res) => {
                             status: "active",
                             start,
                             end,
+                            amount,
                         })
                         res.json(bookingInfo)
                     } else {

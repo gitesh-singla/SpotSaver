@@ -7,6 +7,7 @@ const bookingSchema = new Schema({
     status: {type: String, required: true},
     start: {type: Date, required: true},
     end: {type: Date, required: true},
+    amount: {type: Number, required: true},
 });
 
 const BookingModel = mongoose.model('bookings', bookingSchema);
