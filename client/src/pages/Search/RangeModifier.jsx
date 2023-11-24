@@ -23,7 +23,6 @@ export default function RangePicker({modifySearch}) {
           minDate={new Date()}
           maxDate={new Date().setDate(new Date().getDate() + 6)}
           dateFormat="dd/MM/yyyy"
-          value={selectedDate}
           className="border-tblue border-2 min-w-0 w-28"
         />
       </div>
@@ -36,7 +35,6 @@ export default function RangePicker({modifySearch}) {
           timeIntervals={60}
           timeCaption="Time"
           dateFormat="h:mm aa"
-          value={startTime}
           className="border-tblue border-2 min-w-0 w-28"
         />
       </div>
@@ -46,10 +44,11 @@ export default function RangePicker({modifySearch}) {
           onChange={(date) => setEndTime(date)}
           showTimeSelect
           showTimeSelectOnly
+          minTime={new Date(startTime)}
+          maxTime={new Date().setHours(24)}
           timeIntervals={60}
           timeCaption="Time"
           dateFormat="h:mm aa"
-          value={endTime}
           className="border-tblue border-2 min-w-0 w-28"
         />
       </div>

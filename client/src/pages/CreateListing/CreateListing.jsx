@@ -2,6 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { userContext } from "../../UserContext";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function CreateListing() {
   const [address, setAddress] = useState("");
@@ -10,12 +13,31 @@ export default function CreateListing() {
   const [slots, setSlots] = useState(0);
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
+  const [startTiming, setStartTiming] = useState();
+  const [endTiming, setEndTiming] = useState();
   // const [city, setCity] = useState("");
   const [type, setType] = useState("");
   const [redirect, setRedirect] = useState("");
 
   const { user } = useContext(userContext);
 
+  useEffect(() => {
+    const startDefault = new Date();
+    startDefault.setHours(startDefault.getHours() + 1);
+    startDefault.setMinutes(0);
+    startDefault.setSeconds(0);
+    const endDefault = new Date();
+    endDefault.setHours(endDefault.getHours() + 2);
+    endDefault.setDate(startDefault.getDate())
+    endDefault.setMinutes(0);
+    endDefault.setSeconds(0);
+    setStartTiming(startDefault);
+    setEndTiming(endDefault);
+  }, []);
+
+  useEffect(() => {
+    console.log(startTiming, endTiming);
+  }, [startTiming, endTiming]);
 
   async function addNewListing(e) {
     e.preventDefault();
@@ -25,12 +47,14 @@ export default function CreateListing() {
       price,
       slots,
       type,
+      startTiming,
+      endTiming,
       // city,
       location: {
         lat,
         lon,
       },
-      active: true,
+      status: "active",
     };
     try {
       await axios.post("http://localhost:4000/addlisting", listData, {
@@ -38,7 +62,7 @@ export default function CreateListing() {
       });
       setRedirect("/listings");
     } catch (error) {
-      alert(error.message)
+      alert(error.message);
       console.log(error);
     }
   }
@@ -57,7 +81,6 @@ export default function CreateListing() {
       );
     }
   }
-
 
   if (!user) {
     return <Navigate to={"/login"} />;
@@ -113,6 +136,33 @@ export default function CreateListing() {
             setType(e.target.value);
           }}
         ></input>
+        <h2 className="text-lg text-white">Active Hours</h2>
+        <div className="flex gap-4">
+          <span>From</span>
+          <DatePicker
+            selected={startTiming}
+            onChange={(date) => setStartTiming(date)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={60}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+            value={startTiming}
+            className="border-tblue border-2 min-w-0 w-28"
+          />
+          <span>To</span>
+          <DatePicker
+            selected={endTiming}
+            onChange={(date) => setEndTiming(date)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={60}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+            value={endTiming}
+            className="border-tblue border-2 min-w-0 w-28"
+          />
+        </div>
         <h2 className="text-lg text-white">Location</h2>
         <div className="flex justify-between">
           <input

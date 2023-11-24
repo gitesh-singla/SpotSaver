@@ -203,6 +203,7 @@ function Search() {
                     />
                   );
                 })}
+                {(!spots || spots.length == 0) && <h3>No spots available</h3>}
             </div>
           </section>
         </div>

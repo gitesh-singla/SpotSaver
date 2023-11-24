@@ -9,10 +9,10 @@ require('dotenv').config()
 const Users = require('./models/Users')
 const Spots = require('./models/Spots')
 const Bookings = require('./models/Bookings')
-const distance = require('./functions/distanceFunction')
-const coordinatesToCity = require('./functions/coordsToCity')
+const distance = require('./utils/distanceFunction')
+const coordinatesToCity = require('./utils/coordsToCity')
 const { default: axios } = require('axios')
-const checkAvailability = require('./functions/checkAvailability');
+const checkAvailability = require('./utils/checkAvailability');
 
 
 const app = express()
@@ -152,6 +152,7 @@ app.post('/addlisting', (req, res) => {
 app.get('/listings', async (req, res) => {
     try {
         const { lon, lat, city, startTime, endTime } = req.query;
+        if(startTime >= endTime) throw ("Invalid Time Range.");
         const allSpots = await Spots.find({ city: city }).lean()
         let spots = await Promise.all(allSpots.map(async spot => {
             const available = await checkAvailability(spot._id, spot.slots, startTime, endTime);

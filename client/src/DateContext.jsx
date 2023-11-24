@@ -6,9 +6,11 @@ export function DateContextProvider({ children }) {
     const startDefault = new Date();
     startDefault.setHours(startDefault.getHours() + 1);
     startDefault.setMinutes(0);
+    startDefault.setSeconds(0);
     const endDefault = new Date();
     endDefault.setHours(endDefault.getHours() + 2);
     endDefault.setMinutes(0);
+    endDefault.setSeconds(0);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startTime, setStartTime] = useState(startDefault);
