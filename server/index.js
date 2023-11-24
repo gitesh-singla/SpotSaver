@@ -13,6 +13,8 @@ const distance = require('./utils/distanceFunction')
 const coordinatesToCity = require('./utils/coordsToCity')
 const { default: axios } = require('axios')
 const checkAvailability = require('./utils/checkAvailability');
+const router = require("./routes/routes");
+const useAuth = require('./middleware/useAuth')
 
 
 const app = express()
@@ -40,6 +42,8 @@ async function runMongo() {
 }
 runMongo();
 
+app.use('/', router)
+
 app.post('/register', async (req, res) => {
     const { name, email, phone, password } = req.body
     //console.log(name, email, phone, password);
@@ -64,54 +68,64 @@ app.post('/register', async (req, res) => {
 }
 )
 
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body
+// app.post('/login', async (req, res) => {
+//     const { email, password } = req.body
 
+//     try {
+//         const userExists = await Users.findOne({ email: email })
+//         //console.log(userExists);
+//         if (userExists) {
+//             const passwordValid = bcrypt.compareSync(password, userExists.password)
+
+//             if (passwordValid) {
+//                 jwt.sign({ email: userExists.email, _id: userExists._id }, jwtKey, {}, (error, token) => {
+//                     try {
+//                         if (error) throw error
+//                         const { name, email, _id, phone } = userExists
+//                         res.cookie('authToken', token).json({ name, email, _id, phone })
+//                     } catch (error) {
+//                         console.log(error);
+//                         res.status(422).json(error.message)
+//                     }
+//                 })
+//             } else {
+//                 res.status(422).json('password is invalid')
+//             }
+//         } else {
+//             res.status(422).json('not found')
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(422).json(error.message)
+//     }
+// })
+
+// app.get('/auth', (req, res) => {
+//     const { authToken } = req.cookies
+//     //console.log(req.cookies);
+//     if (authToken) {
+//         jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
+//             try {
+//                 if (err) throw err;
+//                 const { name, email, _id, phone } = await Users.findById(jwtResponse._id)
+//                 res.json({ name, email, _id, phone });
+//             } catch (error) {
+//                 console.log(error)
+//                 res.status(422).json(error.message)
+//             }
+//         })
+//     } else {
+//         res.json(null)
+//     }
+// })
+app.get('/auth', useAuth, async (req, res) => {
+    const { jwtResponse } = req;
     try {
-        const userExists = await Users.findOne({ email: email })
-        //console.log(userExists);
-        if (userExists) {
-            const passwordValid = bcrypt.compareSync(password, userExists.password)
-
-            if (passwordValid) {
-                jwt.sign({ email: userExists.email, _id: userExists._id }, jwtKey, {}, (error, token) => {
-                    try {
-                        if (error) throw error
-                        const { name, email, _id, phone } = userExists
-                        res.cookie('authToken', token).json({ name, email, _id, phone })
-                    } catch (error) {
-                        console.log(error);
-                        res.status(422).json(error.message)
-                    }
-                })
-            } else {
-                res.status(422).json('password is invalid')
-            }
-        } else {
-            res.status(422).json('not found')
-        }
+        const { name, email, _id, phone } = await Users.findById(jwtResponse._id)
+        res.json({ name, email, _id, phone });
     } catch (error) {
-        console.log(error);
+        console.log(error)
         res.status(422).json(error.message)
-    }
-})
-
-app.get('/auth', (req, res) => {
-    const { authToken } = req.cookies
-    //console.log(req.cookies);
-    if (authToken) {
-        jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
-            try {
-                if (err) throw err;
-                const { name, email, _id, phone } = await Users.findById(jwtResponse._id)
-                res.json({ name, email, _id, phone });
-            } catch (error) {
-                console.log(error)
-                res.status(422).json(error.message)
-            }
-        })
-    } else {
-        res.json(null)
     }
 })
 
@@ -119,32 +133,24 @@ app.post('/logout', (req, res) => {
     res.cookie('authToken', '').json('Logged out.')
 })
 
-app.post('/addlisting', (req, res) => {
+app.post('/addlisting', useAuth, async (req, res) => {
     const data = req.body
-    const { authToken } = req.cookies
-    if (authToken) {
-        jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
-            try {
-                if (err) throw err;
-                const { _id, phone } = await Users.findById(jwtResponse._id)
-                // console.log({ _id, phone });
-                const city = await coordinatesToCity(data.location.lat, data.location.lon)
-                if (!city) throw ('city not determined')
-                const newSpot = await Spots.create({
-                    ...data,
-                    city,
-                    owner: _id,
-                    createdAt: new Date(),
-                    phone,
-                })
-                res.json(newSpot)
-            } catch (error) {
-                console.log(error);
-                res.status(422).json(error.message)
-            }
+    const { jwtResponse } = req;
+    try {
+        const { _id, phone } = await Users.findById(jwtResponse._id)
+        const city = await coordinatesToCity(data.location.lat, data.location.lon)
+        if (!city) throw ('city not determined')
+        const newSpot = await Spots.create({
+            ...data,
+            city,
+            owner: _id,
+            createdAt: new Date(),
+            phone,
         })
-    } else {
-        res.status(302).json('not logged in')
+        res.json(newSpot)
+    } catch (error) {
+        console.log(error);
+        res.status(422).json(error.message)
     }
 })
 
@@ -152,7 +158,7 @@ app.post('/addlisting', (req, res) => {
 app.get('/listings', async (req, res) => {
     try {
         const { lon, lat, city, startTime, endTime } = req.query;
-        if(startTime >= endTime) throw ("Invalid Time Range.");
+        if (startTime >= endTime) throw ("Invalid Time Range.");
         const allSpots = await Spots.find({ city: city }).lean()
         let spots = await Promise.all(allSpots.map(async spot => {
             const available = await checkAvailability(spot._id, spot.slots, startTime, endTime);
@@ -191,102 +197,75 @@ app.get('/listing/', async (req, res) => {
     }
 })
 
-app.post('/book', async (req, res) => {
+app.post('/book', useAuth,  async (req, res) => {
     const { spot, start, end, amount } = req.body;
-    const { authToken } = req.cookies
-    if (authToken) {
-        jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
-            try {
-                if (err) throw err;
-                if (!spot || !start || !end || start >= end) {
-                    throw ("Invalid request");
-                }
-                if (start > new Date().setDate(new Date().getDate() + 6) || start < new Date()) {
-                    throw ("Invalid request");
-                }
-                const spotExists = await Spots.findOne({ _id: spot });
-                if (spotExists) {
-                    const { slots } = spotExists;
-                    const available = await checkAvailability(spot, slots, start, end);
-                    if (available) {
-                        const bookingInfo = await Bookings.create({
-                            spot,
-                            createdAt: new Date(),
-                            client: jwtResponse._id,
-                            status: "active",
-                            start,
-                            end,
-                            amount,
-                        })
-                        res.json(bookingInfo)
-                    } else {
-                        throw ("Spot unavailable at requested time.");
-                    }
-                } else {
-                    throw ("Spot does not exist.");
-                }
-            } catch (error) {
-                console.log(error);
-                res.status(422).json(error)
+    const { jwtResponse } = req;
+    try {
+        if (!spot || !start || !end || start >= end) {
+            throw ("Invalid request");
+        }
+        if (start > new Date().setDate(new Date().getDate() + 6) || start < new Date()) {
+            throw ("Invalid request");
+        }
+        const spotExists = await Spots.findOne({ _id: spot });
+        if (spotExists) {
+            const { slots } = spotExists;
+            const available = await checkAvailability(spot, slots, start, end);
+            if (available) {
+                const bookingInfo = await Bookings.create({
+                    spot,
+                    createdAt: new Date(),
+                    client: jwtResponse._id,
+                    status: "active",
+                    start,
+                    end,
+                    amount,
+                })
+                res.json(bookingInfo)
+            } else {
+                throw ("Spot unavailable at requested time.");
             }
-        })
-    } else {
-        res.status(302).json('Not logged in.')
+        } else {
+            throw ("Spot does not exist.");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(422).json(error)
     }
 })
 
-app.get('/myspots', async (req, res) => {
-    const { authToken } = req.cookies
-    if (authToken) {
-        jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
-            try {
-                if (err) throw err;
-                const spots = await Spots.find({owner: jwtResponse._id});
-                res.json(spots)
-            } catch (error) {
-                console.log(error);
-                res.status(422).json(error.message)
-            }
-        })
-    } else {
-        res.status(302).json('not logged in')
+app.get('/myspots', useAuth, async (req, res) => {
+    ;
+    const { jwtResponse } = req;
+    try {
+        const spots = await Spots.find({ owner: jwtResponse._id });
+        res.json(spots)
+    } catch (error) {
+        console.log(error);
+        res.status(422).json(error.message)
     }
 })
 
-app.get('/reservations', async (req, res) => {
-    const { authToken } = req.cookies
-    console.log("reservations requested");
-    if (authToken) {
-        jwt.verify(authToken, jwtKey, {}, async (err, jwtResponse) => {
-            try {
-                if (err) throw err;
-                const reservations = await Bookings.find({client: jwtResponse._id}).lean();
-                console.log("reservations: ", reservations.length);
-                const resInfo = await Promise.all(reservations.map(async reservation => {
-                    let spotInfo = await Spots.findOne({_id: reservation.spot}).lean();
-                    console.log("logging spotinfo", spotInfo);
-                    return {
-                        ...reservation,
-                        address: spotInfo.address,
-                        description: spotInfo.description,
-                        phone: spotInfo.phone,
-                        cost: spotInfo.price,
-                    }
-                }));
-                res.json(resInfo)
-            } catch (error) {
-                console.log(error);
-                res.status(422).json(error.message)
+app.get('/reservations', useAuth, async (req, res) => {
+    const { jwtResponse } = req;
+    try {
+        const reservations = await Bookings.find({ client: jwtResponse._id }).lean();
+        console.log("reservations: ", reservations.length);
+        const resInfo = await Promise.all(reservations.map(async reservation => {
+            let spotInfo = await Spots.findOne({ _id: reservation.spot }).lean();
+            console.log("logging spotinfo", spotInfo);
+            return {
+                ...reservation,
+                address: spotInfo.address,
+                description: spotInfo.description,
+                phone: spotInfo.phone,
+                cost: spotInfo.price,
             }
-        })
-    } else {
-        res.status(302).json('not logged in')
+        }));
+        res.json(resInfo)
+    } catch (error) {
+        console.log(error);
+        res.status(422).json(error.message)
     }
 })
-
-async function logSpots() {
-    const data = await Spots.find({});
-    console.log(data);
-}
-// logSpots()
 

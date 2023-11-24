@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import List from "../../components/List";
-import Map from "../../components/Map";
+import List from "./List";
+import Map from "./Map";
 import axios from "axios";
-import { userContext } from "../../UserContext";
-import { DateContext } from "../../DateContext";
+import { userContext } from "../../Contexts/UserContext";
+import { DateContext } from "../../Contexts/DateContext";
 import RangePicker from "./RangeModifier";
 
-function Search() {
+function Listings() {
   const [spots, setSpots] = useState([]);
   const [city, setCity] = useState("");
   const [pincode, setPincode] = useState();
@@ -212,4 +212,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default Listings;

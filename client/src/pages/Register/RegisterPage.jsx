@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { userContext } from "../../UserContext";
+import { userContext } from "../../Contexts/UserContext";
 import { Navigate } from "react-router-dom";
 
 export default function RegisterPage() {

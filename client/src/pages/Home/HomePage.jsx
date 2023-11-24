@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import RangePicker from "./RangePicker";
 import { useContext } from "react";
-import { DateContext } from "../../DateContext";
+import { DateContext } from "../../Contexts/DateContext";
 
 export default function HomePage() {
   const {startTime, endTime} = useContext(DateContext);

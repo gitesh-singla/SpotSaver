@@ -2,7 +2,7 @@ import { useContext } from "react";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { DateContext } from "../../DateContext";
+import { DateContext } from "../../Contexts/DateContext";
 
 export default function RangePicker() {
   const {

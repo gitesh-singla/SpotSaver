@@ -4,8 +4,8 @@ import HomePage from "./pages/Home/HomePage";
 import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Register/RegisterPage";
 import Navbar from "./components/Navbar";
-import { userContext } from "./UserContext";
-import Search from "./pages/Search/Search";
+import { userContext } from "./Contexts/UserContext";
+import Listings from "./pages/Listings/Listings";
 import CreateListing from "./pages/CreateListing/CreateListing";
 import Profile from "./pages/Profile/Profile";
 import ListingPage from "./pages/Listing/ListingPage";
@@ -28,7 +28,7 @@ function App() {
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/myspots" element={<MySpots />}></Route>
           <Route path="/reservations" element={<Reservations />}></Route>
-          <Route path="/listings/" element={<Search />}></Route>
+          <Route path="/listings/" element={<Listings />}></Route>
           <Route path="/create-listing" element={<CreateListing />}></Route>
           <Route path="/listing/:id" element={<ListingPage />}></Route>
         </Routes>
