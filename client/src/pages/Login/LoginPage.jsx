@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import axios from "axios";
 import { userContext } from "../../UserContext";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -38,8 +38,8 @@ export default function LoginPage() {
         <div className="shrink-0">
           <img className="h-[480px] rounded-xl" src={"login-car.jpg"} alt="%" />
         </div>
-        <div className="flex items-center p-8 flex-1">
-          <form className="flex flex-col gap-6 text-lg flex-1">
+        <div className="flex items-center p-8 flex-1 flex-col">
+          <form className="flex flex-col gap-6 text-lg flex-1 justify-center">
             <label className="flex flex-col text-left gap-2 font-bold text-xl">
               Email Address
               <input
@@ -69,8 +69,9 @@ export default function LoginPage() {
               Login
             </button>
           </form>
+          <div className="text-lg">Dont have an Account? <Link to={"/register"} className="ml-1 text-tblue">Register</Link></div>
         </div>
       </div>
     </div>
-  );
+  );  
 }
