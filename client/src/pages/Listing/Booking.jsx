@@ -64,7 +64,7 @@ export default function Booking({ price }) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 mb-8">
       <div>
         <h2>Date: {formatDateString(selectedDate)}</h2>
       </div>

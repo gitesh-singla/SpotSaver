@@ -1,3 +1,7 @@
+const bcrypt = require('bcrypt')
+const Users = require('../models/Users')
+const bcryptSalt = bcrypt.genSaltSync(10)
+
 const register = async (req, res) => {
     const { name, email, phone, password } = req.body
     try {
