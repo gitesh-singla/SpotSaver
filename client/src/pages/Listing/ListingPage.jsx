@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { userContext } from "../../UserContext";
-import ListMap from "../../components/ListMap";
+import { userContext } from "../../Contexts/UserContext";
+import ListMap from "./ListMap";
 import { FadeLoader } from "react-spinners";
 import Booking from './Booking'
 

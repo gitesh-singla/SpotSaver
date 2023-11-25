@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { userContext } from "../UserContext";
+import { userContext } from "../Contexts/UserContext";
 
 export default function Navbar() {
   const { user } = useContext(userContext);

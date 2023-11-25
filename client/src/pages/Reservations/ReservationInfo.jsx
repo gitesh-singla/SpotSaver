@@ -23,7 +23,7 @@ export default function ReservationInfo({reservation}) {
       }
       
       const formattedTimeRange = formatTimeRange(reservation.start, reservation.end);
-      console.log(formattedTimeRange); // Output: 11/15/23, 5:00 PM to 6:00 PM
+      // console.log(formattedTimeRange); // Output: 11/15/23, 5:00 PM to 6:00 PM
       
   return (
     <div className="resrevationTile bg-tblue w-full max-w-4xl p-4 rounded-xl text-white">

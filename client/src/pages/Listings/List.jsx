@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function List({ distance, address, _id, slots, price, setHoveredIndex, hoveredIndex,  index }) {
   const hoverClass = `list-cards shadow-sh rounded-lg block w-[95%] bg-white relative m-[0.625em] p-[0.625em] duration-300 ${index == hoveredIndex ? 'scale-105' : ''}`;

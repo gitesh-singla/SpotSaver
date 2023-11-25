@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { userContext } from "../../UserContext";
+import { userContext } from "../../Contexts/UserContext";
 import { Navigate } from "react-router-dom";
 import { FadeLoader } from "react-spinners";
 import ReservationInfo from "./ReservationInfo";

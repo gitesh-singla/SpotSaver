@@ -11,7 +11,7 @@ import {
 import L from "leaflet";
 
 function ListMap({ spot, location, coordinates }) {
-  console.log(spot);
+  // console.log(spot);
   return (
     <section
       id="map-sec"

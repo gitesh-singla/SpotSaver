@@ -2,10 +2,10 @@ import { useContext, useState } from "react";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { userContext } from "../../UserContext";
+import { userContext } from "../../Contexts/UserContext";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { DateContext } from "../../DateContext";
+import { DateContext } from "../../Contexts/DateContext";
 
 export default function Booking({ price }) {
   const { selectedDate, startTime, endTime } = useContext(DateContext);
@@ -64,7 +64,7 @@ export default function Booking({ price }) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 mb-8">
       <div>
         <h2>Date: {formatDateString(selectedDate)}</h2>
       </div>

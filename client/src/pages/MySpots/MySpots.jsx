@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import SpotInfo from "./SpotInfo";
 import { FadeLoader } from "react-spinners";
 import { Navigate } from "react-router-dom";
-import { userContext } from "../../UserContext";
+import { userContext } from "../../Contexts/UserContext";
 
 export default function MySpots() {
   const [spots, setSpots] = useState([]);
