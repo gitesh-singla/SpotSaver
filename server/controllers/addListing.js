@@ -1,5 +1,6 @@
 const Users = require("../models/Users");
 const Spots = require("../models/Spots");
+const coordinatesToCity = require("../utils/coordsToCity");
 
 const addListing = async (req, res) => {
     const data = req.body
