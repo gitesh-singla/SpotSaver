@@ -11,13 +11,13 @@ const mySpots = require("../controllers/mySpots");
 const reservations = require("../controllers/reservations");
 const useAuth = require("../middleware/useAuth");
 const router = express.Router();
-
+const upload = require("../middleware/upload");
 
 router.post("/login", login);
 router.post("/register", register);
 router.get("/auth", useAuth, auth);
 router.post("/logout", logout);
-router.post("/addlisting", useAuth, addlisting);
+router.post("/addlisting", useAuth, upload.array('spotImages'), addlisting);
 router.get("/listings", getListings);
 router.get("/listing/", getSpot);
 router.post("/book", useAuth, book);
