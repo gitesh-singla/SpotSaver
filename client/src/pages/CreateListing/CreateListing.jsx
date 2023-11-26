@@ -5,6 +5,7 @@ import { userContext } from "../../Contexts/UserContext";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import MapComponent from "./MapComponent";
 
 export default function CreateListing() {
   const [address, setAddress] = useState("");
@@ -13,11 +14,12 @@ export default function CreateListing() {
   const [slots, setSlots] = useState(0);
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
+  const [pincode, setPincode] = useState("  ");
   const [startTiming, setStartTiming] = useState();
   const [endTiming, setEndTiming] = useState();
-  // const [city, setCity] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("small");
   const [redirect, setRedirect] = useState("");
+  const [imageFiles, setImageFiles] = useState([]);
 
   const { user } = useContext(userContext);
 
@@ -28,39 +30,44 @@ export default function CreateListing() {
     startDefault.setSeconds(0);
     const endDefault = new Date();
     endDefault.setHours(endDefault.getHours() + 2);
-    endDefault.setDate(startDefault.getDate())
+    endDefault.setDate(startDefault.getDate());
     endDefault.setMinutes(0);
     endDefault.setSeconds(0);
     setStartTiming(startDefault);
     setEndTiming(endDefault);
   }, []);
 
-  useEffect(() => {
-    console.log(startTiming, endTiming);
-  }, [startTiming, endTiming]);
-
   async function addNewListing(e) {
     e.preventDefault();
-    const listData = {
-      description,
-      address,
-      price,
-      slots,
-      type,
-      startTiming,
-      endTiming,
-      // city,
-      location: {
-        lat,
-        lon,
-      },
-      status: "active",
+
+    const formData = new FormData();
+    const location = {
+      lat,
+      lon,
     };
+
+    formData.append("description", description);
+    formData.append("address", address);
+    formData.append("price", price);
+    formData.append("slots", slots);
+    formData.append("type", type);
+    formData.append("startTiming", startTiming);
+    formData.append("endTiming", endTiming);
+    formData.append("location", JSON.stringify(location));
+    formData.append("status", "active");
+
+    imageFiles.forEach((file) => {
+      formData.append(`spotImages`, file);
+    });
+
     try {
-      await axios.post("http://localhost:4000/addlisting", listData, {
+      await axios.post("http://localhost:4000/addlisting", formData, {
         withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-      setRedirect("/listings");
+      setRedirect("/myspots");
     } catch (error) {
       alert(error.message);
       console.log(error);
@@ -81,6 +88,32 @@ export default function CreateListing() {
       );
     }
   }
+  async function getPinLoaction(e) {
+    e.preventDefault();
+    const { data } = await axios.get(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${pincode}`
+    );
+    setLat(+data[0].lat);
+    setLon(+data[0].lon);
+  }
+
+  const handleImageUpload = (e) => {
+    if (imageFiles.length == 10) return;
+    const maxFileSize = 1024 * 1024; //1MB
+    const selectedImages = Array.from(e.target.files);
+    const filteredImages = selectedImages.filter((image, index) => {
+      if (index >= 10 - imageFiles.length) return false; // to prevent no. of images from exceeding 10
+      return image.size <= maxFileSize;
+    });
+    setImageFiles([...imageFiles, ...filteredImages]);
+  };
+
+  const removeImage = (e, index) => {
+    e.preventDefault();
+    const updatedImages = [...imageFiles];
+    updatedImages.splice(index, 1);
+    setImageFiles(updatedImages);
+  };
 
   if (!user) {
     return <Navigate to={"/login"} />;
@@ -126,16 +159,43 @@ export default function CreateListing() {
             setDescription(e.target.value);
           }}
         ></textarea>
-        <h2 className="text-lg text-white">Type</h2>
-        <input
-          type="text"
+        <label htmlFor="type">Type</label>
+        <select
+          id="type"
           value={type}
-          placeholder="Type..."
+          onChange={(e) => setType(e.target.value)}
+        >
+          <option value="small">Small</option>
+          <option value="big">Big</option>
+          <option value="heavy">Heavy</option>
+        </select>
+        <h2 className="text-lg text-white">Images</h2>
+        <h3>max no. of images: 10 max size: 1MB</h3>
+        <input
+          type="file"
           className="mb-4"
-          onChange={(e) => {
-            setType(e.target.value);
-          }}
+          multiple
+          onChange={(e) => handleImageUpload(e)}
+          accept=".jpg, .jpeg, .png"
         ></input>
+        {/* Display thumbnails and remove buttons for selected images */}
+        <div className="flex flex-wrap gap-2">
+          {imageFiles.map((file, index) => (
+            <div key={index} className="relative">
+              <img
+                src={URL.createObjectURL(file)}
+                alt={`Thumbnail ${index}`}
+                className="w-16 h-16 object-cover rounded"
+              />
+              <button
+                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+                onClick={(e) => removeImage(e, index)}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
         <h2 className="text-lg text-white">Active Hours</h2>
         <div className="flex gap-4">
           <span>From</span>
@@ -145,6 +205,7 @@ export default function CreateListing() {
             showTimeSelect
             showTimeSelectOnly
             timeIntervals={60}
+            popperPlacement="right"
             timeCaption="Time"
             dateFormat="h:mm aa"
             value={startTiming}
@@ -154,43 +215,44 @@ export default function CreateListing() {
           <DatePicker
             selected={endTiming}
             onChange={(date) => setEndTiming(date)}
+            minTime={startTiming}
+            maxTime={new Date().setHours(23)}
             showTimeSelect
             showTimeSelectOnly
             timeIntervals={60}
+            popperPlacement="right"
             timeCaption="Time"
             dateFormat="h:mm aa"
             value={endTiming}
             className="border-tblue border-2 min-w-0 w-28"
           />
         </div>
-        <h2 className="text-lg text-white">Location</h2>
-        <div className="flex justify-between">
-          <input
-            type="number"
-            value={lat}
-            onChange={(e) => {
-              setLat(e.target.value);
-            }}
-          ></input>
-          <input
-            type="number"
-            value={lon}
-            onChange={(e) => {
-              setLon(e.target.value);
-            }}
-          ></input>
-          <button className="text-black bg-primary" onClick={getLocation}>
-            Get Location
-          </button>
-        </div>
         <h2 className="text-lg text-white">Slots:</h2>
         <input
           type="number"
           value={slots}
+          min={1}
           onChange={(e) => {
             setSlots(e.target.value);
           }}
         ></input>
+        <h2 className="text-lg text-white">Location</h2>
+        <div className="flex justify-between gap-2 mb-2">
+          <input
+            type="text"
+            value={pincode}
+            onChange={(e) => {
+              setPincode(e.target.value);
+            }}
+          ></input>
+          <button className="text-black bg-primary" onClick={getPinLoaction}>
+            Get Pin Location
+          </button>
+          <button className="text-black bg-primary" onClick={getLocation}>
+            Get Location
+          </button>
+        </div>
+        <MapComponent lat={lat} setLat={setLat} lon={lon} setLon={setLon} />
         <button
           className="bg-primary py-2 px-4 rounded-full mb-16 mt-6"
           onClick={addNewListing}

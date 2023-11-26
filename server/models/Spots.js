@@ -17,6 +17,7 @@ const spotSchema = new Schema({
     endTiming: {type: Date, required: true},
     createdAt: {type: Date, required: true},
     updatedAt: {type: Date},
+    images: {type: [String], required: true},
     currentBookings: {type: [{type: mongoose.Schema.Types.ObjectId, ref: 'bookings' }], required: true},
     description: String,
 });

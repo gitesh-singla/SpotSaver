@@ -23,9 +23,6 @@ function Listings() {
     if (!lat || !lon) getLocation();
     coordinatesToCity(lat, lon);
   }, []);
-  useEffect(() => {
-    console.log(hoveredIndex);
-  }, [hoveredIndex]);
 
   function getLocation() {
     if ("geolocation" in navigator) {

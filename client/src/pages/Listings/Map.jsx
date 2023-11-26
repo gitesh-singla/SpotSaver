@@ -4,13 +4,10 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  Popup,
-  Circle,
   useMap,
-  useMapEvent,
 } from "react-leaflet";
 import L from "leaflet";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Map({ spots, location, setHoveredIndex, hoveredIndex }) {
   return (
