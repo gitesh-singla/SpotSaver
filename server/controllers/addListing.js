@@ -15,7 +15,7 @@ const addListing = async (req, res) => {
         const images = req.files.map((file) => file.filename);
         const city = await coordinatesToCity(data.location.lat, data.location.lon)
         if (!city) throw ('city not determined')
-        const newSpot = await Spots.create({
+        await Spots.create({
             ...data,
             city,
             owner: _id,
@@ -44,7 +44,7 @@ const cleanupFiles =  async (req) => {
       imagesToDelete.map(async (fileName) => {
         // Adjust this code based on where your files are stored (memory or disk)
         // For example, if using disk storage, you might have files stored in the 'uploads' directory
-        const filePath = path.join(__dirname, '..', 'public', 'spot-images', fileName);
+        const filePath = path.join(__dirname, '..', 'uploads', 'spot-images', fileName);
         await fsPromises.unlink(filePath);
       })
     );
