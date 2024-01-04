@@ -45,7 +45,7 @@ export default function RangeModifier({modifySearch}) {
           showTimeSelect
           showTimeSelectOnly
           minTime={new Date(startTime)}
-          maxTime={new Date().setHours(24)}
+          maxTime={new Date().setHours(23)}
           timeIntervals={60}
           timeCaption="Time"
           dateFormat="h:mm aa"

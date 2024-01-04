@@ -14,6 +14,7 @@ export default function ReviewSection() {
       .get(`http://localhost:4000/getreviews?id=${id}`)
       .then(({ data }) => {
         setRatings(data);
+        console.log(ratings);
       })
       .catch((error) => {
         console.log(error.message);
@@ -25,7 +26,7 @@ export default function ReviewSection() {
       {userExists && <ReviewModal />}
       {!userExists && <div>Login to add a review!</div>}
       {ratings && ratings.map(element => {
-        <ReviewTile key={element._id} rating={element.rating} review={element.review} name={element.name} datePosted={element.createdAt}/>
+        return <ReviewTile key={element._id} rating={element.rating} review={element.review} name={element.name} datePosted={element.createdAt}/>
       })}
     </div>
   );

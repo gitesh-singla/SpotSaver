@@ -47,6 +47,8 @@ export default function RangePicker() {
           onChange={(date) => setEndTime(date)}
           showTimeSelect
           showTimeSelectOnly
+          minTime={new Date(startTime)}
+          maxTime={new Date().setHours(23)}
           timeIntervals={60}
           timeCaption="Time"
           dateFormat="h:mm aa"

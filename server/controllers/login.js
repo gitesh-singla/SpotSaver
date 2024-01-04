@@ -19,7 +19,7 @@ const login = async (req, res) => {
             try {
               if (error) throw error;
               const { name, email, _id, phone } = userExists;
-              res.cookie("authToken", token).json("Logged In!");
+              res.cookie("authToken", token).json({ name, email, _id, phone });
             } catch (error) {
               console.log(error);
               res.status(422).json(error.message);

@@ -22,7 +22,7 @@ export function UserContextProvider({ children }) {
         setReady(true);
         console.log(error.message);
       });
-  }, []);
+  }, [user]);
 
   return (
     <userContext.Provider

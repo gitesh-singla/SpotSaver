@@ -1,3 +1,5 @@
+import { Rating } from "react-simple-star-rating";
+
 export default function ReviewTile(props) {
     
   function formatDateString(dateString) {
@@ -19,6 +21,11 @@ export default function ReviewTile(props) {
         <div className="font-bold text-lg">{props.name}</div>
         <div className="font-light">{formatDateString(props.datePosted)}</div>
       </div>
+      <Rating
+        SVGclassName={"inline-block"}
+        initialValue={props.rating}
+        readonly
+      />
       <div>{props.review}</div>
     </div>
   );
