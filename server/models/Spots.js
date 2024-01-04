@@ -20,6 +20,8 @@ const spotSchema = new Schema({
     images: {type: [String], required: true},
     currentBookings: {type: [{type: mongoose.Schema.Types.ObjectId, ref: 'bookings' }], required: true},
     description: String,
+    ratingCount: {type: Number, required: true},
+    rating: {type: Number, required: true}
 });
 
 const SpotModel = mongoose.model('spots', spotSchema);

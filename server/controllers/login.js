@@ -12,14 +12,14 @@ const login = async (req, res) => {
 
       if (passwordValid) {
         jwt.sign(
-          { email: userExists.email, _id: userExists._id },
+          { email: userExists.email, _id: userExists._id, name: userExists.name },
           jwtKey,
           {},
           (error, token) => {
             try {
               if (error) throw error;
               const { name, email, _id, phone } = userExists;
-              res.cookie("authToken", token).json({ name, email, _id, phone });
+              res.cookie("authToken", token).json("Logged In!");
             } catch (error) {
               console.log(error);
               res.status(422).json(error.message);

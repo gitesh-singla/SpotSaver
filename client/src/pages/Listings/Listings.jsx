@@ -4,7 +4,7 @@ import Map from "./Map";
 import axios from "axios";
 import { userContext } from "../../Contexts/UserContext";
 import { DateContext } from "../../Contexts/DateContext";
-import RangePicker from "./RangeModifier";
+import RangeModifier from "./RangeModifier";
 
 function Listings() {
   const [spots, setSpots] = useState([]);
@@ -103,6 +103,12 @@ function Listings() {
     });
     setSpots(arr);
   }
+  function sortByRating() {
+    const arr = [...spots].sort((a, b) => {
+      return a.rating < b.rating ? 1 : -1;
+    });
+    setSpots(arr);
+  }
 
   return (
     <>
@@ -137,7 +143,7 @@ function Listings() {
               <img className="h-[1.25rem]" src="/search-svg.svg" alt="" />
             </button>
           </div>
-          <RangePicker modifySearch={searchSpots}/>
+          <RangeModifier modifySearch={searchSpots} />
         </div>
         {/* filter */}
         <div className="filter fixed bottom-0 left-0 z-30 m-[1.25em] block w-[70%]">
@@ -178,8 +184,11 @@ function Listings() {
                 >
                   Price
                 </li>
-                <li className="text-xl  text-[#999999] cursor-pointer">
-                  Reviews
+                <li
+                  className="text-xl  text-[#999999] cursor-pointer"
+                  onClick={sortByRating}
+                >
+                  Rating
                 </li>
               </ul>
             </header>
@@ -194,13 +203,14 @@ function Listings() {
                       _id={spot._id}
                       key={spot._id}
                       price={spot.price}
+                      rating={spot.rating}
                       hoveredIndex={hoveredIndex}
                       setHoveredIndex={setHoveredIndex}
                       index={index}
                     />
                   );
                 })}
-                {(!spots || spots.length == 0) && <h3>No spots available</h3>}
+              {(!spots || spots.length == 0) && <h3>No spots available</h3>}
             </div>
           </section>
         </div>

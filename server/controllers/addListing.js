@@ -22,6 +22,8 @@ const addListing = async (req, res) => {
             createdAt: new Date(),
             phone,
             images,
+            ratingCount: 0,
+            rating: 0
         })
         res.json("Listing Added")
     } catch (error) {

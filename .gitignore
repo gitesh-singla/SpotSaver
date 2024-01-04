@@ -12,12 +12,14 @@ dist
 dist-ssr
 extras
 uploads
+todos.txt
 *.local
 *.env
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+.VSCodeCounter
 .idea
 .DS_Store
 *.suo
