@@ -14,6 +14,8 @@ const router = express.Router();
 const upload = require("../middleware/upload");
 const addReview = require("../controllers/addReview");
 const getReviews = require("../controllers/getReviews");
+const editUser = require("../controllers/editUser");
+const changePassword = require("../controllers/changePassword");
 
 router.post("/login", login);
 router.post("/register", register);
@@ -27,5 +29,7 @@ router.get("/myspots", useAuth, mySpots);
 router.get("/reservations", useAuth, reservations);
 router.post("/addreview", useAuth, addReview);
 router.get("/getreviews", getReviews);
+router.patch("/edituser", useAuth, editUser);
+router.patch("/changepassword", useAuth, changePassword);
 
 module.exports = router;
