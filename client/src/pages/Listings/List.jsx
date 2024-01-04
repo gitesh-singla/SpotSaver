@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function List({ distance, address, _id, slots, price, setHoveredIndex, hoveredIndex,  index }) {
+function List({ distance, address, _id, slots, price, rating, setHoveredIndex, hoveredIndex,  index }) {
   const hoverClass = `list-cards shadow-sh rounded-lg block w-[95%] bg-white relative m-[0.625em] p-[0.625em] duration-300 ${index == hoveredIndex ? 'scale-105' : ''}`;
 
   return (
@@ -20,9 +20,13 @@ function List({ distance, address, _id, slots, price, setHoveredIndex, hoveredIn
             <div className="text-3xl p-0.5">₹{price}</div>
             <div className="text-lg ">per hour</div>
           </div>
-          <div className="list-card-detail-time  flex flex-col w-1/2 text-center p-[0.375em] text-2xl">
+          <div className="list-card-detail-dist  flex flex-col w-1/2 text-center p-[0.375em] text-2xl">
             <div className="text-3xl p-0.5">{distance}</div>
             <div className="text-lg ">Km Away</div>
+          </div>
+          <div className="list-card-detail-rating  flex flex-col w-1/2 text-center p-[0.375em] text-2xl">
+            <div className="text-3xl p-0.5">{rating}</div>
+            <div className="text-lg ">rating</div>
           </div>
         </div>
       </Link>

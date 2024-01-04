@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DateContext } from "../../Contexts/DateContext";
 
-export default function RangePicker({modifySearch}) {
+export default function RangeModifier({modifySearch}) {
   const {
     selectedDate,
     setSelectedDate,

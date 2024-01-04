@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import { userContext } from "../../Contexts/UserContext";
 import ListMap from "./ListMap";
 import { FadeLoader } from "react-spinners";
-import Booking from './Booking'
+import Booking from "./Booking";
+import ReviewSection from "./ReviewSection";
 
 export default function ListingPage() {
   const { id } = useParams();
@@ -13,7 +14,7 @@ export default function ListingPage() {
   const { lat, lon, setLat, setLon } = useContext(userContext);
 
   useEffect(() => {
-    if(!lat || !lon){
+    if (!lat || !lon) {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -36,7 +37,7 @@ export default function ListingPage() {
       const { data } = await axios.get(url);
       setSpot(data);
     } catch (error) {
-      console.log('in getData()', error.message);
+      console.log("in getData()", error.message);
     }
   }
   if (!spot) {
@@ -46,12 +47,11 @@ export default function ListingPage() {
   if (spot) {
     return (
       <>
-        <main className="absolute top-57 right-0 left-0 bottom-0 overflow-hidden">
-          {/* filter */}
-          <div className="divide w-full flex">
-            <section
+        <main>
+          <div className="divide w-full">
+            <div
               id="map-sec"
-              className="fixed top-[57px] right-0 left-0 bottom-[52px] w-full h-full z-0"
+              className="w-[240px] h-[240px]"
             >
               {spot && (
                 <ListMap
@@ -62,11 +62,12 @@ export default function ListingPage() {
                   })}
                 />
               )}
-            </section>
+            </div>
 
-            <section
+
+            <div
               id="list-sec"
-              className="w-[450px] h-full fixed top-[57px] right-0 z-10 bg-[#f9f9f9] overflow-y-auto "
+              className="bg-[#f9f9f9] overflow-y-auto "
             >
               <div className="bg-[#2963a3] h-16 text-white text-2xl text-center leading-[64px] font-bold">
                 {spot.address}
@@ -83,17 +84,23 @@ export default function ListingPage() {
                   Owner: {spot.name}
                   <div>contact: {spot.phone}</div>
                 </div>
-                {spot.distance && <div className="border-b-4 border-blue-500">
-                  Distance: {(spot.distance/1000).toFixed(2)}Km
-                </div>}
-                {spot.duration && <div className="border-b-4 border-blue-500">
-                  ETA: {(spot.duration / 60).toFixed(2)}min
-                </div>}
+                {spot.distance && (
+                  <div className="border-b-4 border-blue-500">
+                    Distance: {(spot.distance / 1000).toFixed(2)}Km
+                  </div>
+                )}
+                {spot.duration && (
+                  <div className="border-b-4 border-blue-500">
+                    ETA: {(spot.duration / 60).toFixed(2)}min
+                  </div>
+                )}
                 <div>
-                  <Booking price={spot.price}/>
+                  <Booking price={spot.price} />
                 </div>
               </div>
-            </section>
+            </div>
+
+            <ReviewSection />
           </div>
         </main>
       </>

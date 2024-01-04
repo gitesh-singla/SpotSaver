@@ -12,6 +12,8 @@ const reservations = require("../controllers/reservations");
 const useAuth = require("../middleware/useAuth");
 const router = express.Router();
 const upload = require("../middleware/upload");
+const addReview = require("../controllers/addReview");
+const getReviews = require("../controllers/getReviews");
 
 router.post("/login", login);
 router.post("/register", register);
@@ -23,5 +25,7 @@ router.get("/listing/", getSpot);
 router.post("/book", useAuth, book);
 router.get("/myspots", useAuth, mySpots);
 router.get("/reservations", useAuth, reservations);
+router.post("/addreview", useAuth, addReview);
+router.get("/getreviews", getReviews);
 
 module.exports = router;

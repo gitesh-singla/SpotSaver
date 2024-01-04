@@ -13,10 +13,6 @@ import L from "leaflet";
 function ListMap({ spot, location, coordinates }) {
   // console.log(spot);
   return (
-    <section
-      id="map-sec"
-      className="fixed top-[57px] right-0 left-0 bottom-[52px] w-full h-full z-0"
-    >
       <MapContainer
         center={[spot.location.lat, spot.location.lon]}
         zoom={13}
@@ -34,7 +30,6 @@ function ListMap({ spot, location, coordinates }) {
         />
         {coordinates && <Polyline positions={coordinates} color="blue" />}
       </MapContainer>
-    </section>
   );
 }
 
