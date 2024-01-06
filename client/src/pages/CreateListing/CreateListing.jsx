@@ -14,7 +14,7 @@ export default function CreateListing() {
   const [slots, setSlots] = useState(0);
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
-  const [pincode, setPincode] = useState("  ");
+  const [pincode, setPincode] = useState("");
   const [startTiming, setStartTiming] = useState();
   const [endTiming, setEndTiming] = useState();
   const [type, setType] = useState("small");
@@ -88,7 +88,7 @@ export default function CreateListing() {
       );
     }
   }
-  async function getPinLoaction(e) {
+  async function getPinLocation(e) {
     e.preventDefault();
     const { data } = await axios.get(
       `https://nominatim.openstreetmap.org/search?format=json&q=${pincode}`
@@ -124,142 +124,221 @@ export default function CreateListing() {
   }
 
   return (
-    <div className="mt-8 bg-slate-400 mx-auto w-fit p-8 rounded-xl">
-      <form
-        className="flex flex-col justify-center max-w-4xl mx-auto "
-        encType="multipart/form-data"
-        onSubmit={addNewListing}
-      >
-        <h2 className="text-lg text-white">Address</h2>
-        <input
-          type="text"
-          value={address}
-          placeholder="Address..."
-          className="mb-4"
-          onChange={(e) => {
-            setAddress(e.target.value);
-          }}
-        ></input>
-        <h2 className="text-lg text-white">Price/Hour</h2>
-        <input
-          type="number"
-          value={price}
-          placeholder="Title..."
-          className="mb-4"
-          onChange={(e) => {
-            setPrice(e.target.value);
-          }}
-        ></input>
-        <h2 className="text-lg text-white">Description</h2>
-        <textarea
-          rows={3}
-          value={description}
-          className="mb-4"
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-        ></textarea>
-        <label htmlFor="type">Type</label>
-        <select
-          id="type"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <option value="small">Small</option>
-          <option value="big">Big</option>
-          <option value="heavy">Heavy</option>
-        </select>
-        <h2 className="text-lg text-white">Images</h2>
-        <h3>max no. of images: 10 max size: 1MB</h3>
-        <input
-          type="file"
-          className="mb-4"
-          multiple
-          onChange={(e) => handleImageUpload(e)}
-          accept=".jpg, .jpeg, .png"
-        ></input>
-        {/* Display thumbnails and remove buttons for selected images */}
-        <div className="flex flex-wrap gap-2">
-          {imageFiles.map((file, index) => (
-            <div key={index} className="relative">
-              <img
-                src={URL.createObjectURL(file)}
-                alt={`Thumbnail ${index}`}
-                className="w-16 h-16 object-cover rounded"
-              />
-              <button
-                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
-                onClick={(e) => removeImage(e, index)}
-              >
-                Remove
-              </button>
+    <section className="section-container ">
+      <div className=" max-w-[700px] w-full">
+        <div className="flex flex-col sm:py-12">
+          <div className="">
+            <h2 className="leading-relaxed font-semibold text-3xl text-gray-700">
+              Add a spot
+            </h2>
+            <div className="divide-y divide-gray">
+              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                <div className="flex flex-col">
+                  <label className="leading-loose">Address</label>
+                  <input
+                    type="text"
+                    className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                    placeholder="Address"
+                    onChange={(e) => {
+                      setAddress(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="leading-loose">Price (per Hour)</label>
+                  <input
+                    type="text"
+                    className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                    placeholder="Price"
+                    onChange={(e) => {
+                      setPrice(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="flex flex-col">
+                    <label className="leading-loose">From</label>
+                    <div className="relative focus-within:text-gray-600 text-gray-400">
+                      <DatePicker
+                        selected={startTiming}
+                        onChange={(date) => setStartTiming(date)}
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={60}
+                        popperPlacement="right"
+                        timeCaption="Time"
+                        dateFormat="h:mm aa"
+                        value={startTiming}
+                        className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                      />
+                      <img
+                        src="/clock.svg"
+                        width={"20px"}
+                        className="absolute left-3 top-2"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="leading-loose">Till</label>
+                    <div className="relative focus-within:text-gray-600 text-gray-400">
+                      <DatePicker
+                        selected={endTiming}
+                        onChange={(date) => setEndTiming(date)}
+                        minTime={startTiming}
+                        maxTime={new Date().setHours(23)}
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={60}
+                        popperPlacement="right"
+                        timeCaption="Time"
+                        dateFormat="h:mm aa"
+                        value={endTiming}
+                        className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                      />
+                      <img
+                        src="/clock.svg"
+                        width={"20px"}
+                        className="absolute left-3 top-2"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <label className="leading-loose">Description</label>
+                  <textarea
+                    className=" resize-none px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                    placeholder="Description"
+                    rows={4}
+                    onChange={(e) => {
+                      setDescription(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="leading-loose">Slots</label>
+                  <input
+                    type="number"
+                    className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                    placeholder="Slots"
+                    min={1}
+                    onChange={(e) => {
+                      setSlots(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="leading-loose">Type</label>
+                  <select
+                    onChange={(e) => setType(e.target.value)}
+                    className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                  >
+                    <option value="small">Small</option>
+                    <option value="big">Big</option>
+                    <option value="heavy">Heavy</option>
+                  </select>
+                </div>
+                <div className="flex flex-col">
+                  <label className="leading-loose">
+                    Upload Images{" "}
+                    <span className="text-gray text-base">
+                      (upto 10 images)
+                    </span>
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {imageFiles.map((file, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`Thumbnail ${index}`}
+                          className="object-cover rounded-lg w-28 h-20 hover:-translate-y-1 transition duration-100"
+                        />
+                        <button
+                          className="absolute top-1 right-1 bg-primary text-white px-2 opacity-80 rounded-full hover:opacity-100 active:scale-95"
+                          onClick={(e) => removeImage(e, index)}
+                        >
+                          X
+                        </button>
+                      </div>
+                    ))}
+                    <label
+                      for="upload"
+                      className="flex flex-col items-center gap-2 cursor-pointer w-28 h-20 border-secondary border-2 rounded-lg"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-10 w-10 fill-white stroke-primary"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      </svg>
+                      <span className="text-gray-600 font-medium text-sm">
+                        Max: 1MB
+                      </span>
+                    </label>
+                  </div>
+                  <input
+                    id="upload"
+                    type="file"
+                    className="hidden"
+                    multiple
+                    onChange={(e) => handleImageUpload(e)}
+                    accept=".jpg, .jpeg, .png"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="leading-loose">Location</label>
+                  <div className="flex items-center gap-4 mb-4">
+                    <button
+                      className="bg-primary flex justify-center items-center text-white px-2 py-1 rounded-md focus:outline-none hover:bg-secondary active:scale-95 transition duration-200"
+                      onClick={getLocation}
+                    >
+                      Auto detect
+                    </button>
+                    <span>Or</span>
+                    <div className="flex gap-2 items-center">
+                      <input
+                        type="text"
+                        value={pincode}
+                        className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                        placeholder="Pincode"
+                        onChange={(e) => {
+                          setPincode(e.target.value);
+                        }}
+                      ></input>
+                      <button
+                        className="bg-primary flex justify-center items-center text-white px-2 py-1 rounded-md focus:outline-none hover:bg-secondary active:scale-95 transition duration-200"
+                        onClick={getPinLocation}
+                      >
+                        Get Pincode
+                      </button>
+                    </div>
+                  </div>
+                  <MapComponent
+                    lat={lat}
+                    setLat={setLat}
+                    lon={lon}
+                    setLon={setLon}
+                  />
+                </div>
+              </div>
+              <div>
+                <button
+                  onClick={addNewListing}
+                  className="bg-secondary mt-8 flex justify-center mx-auto items-center w-fit text-white px-6 py-3 rounded-md focus:outline-none hover:bg-primary active:scale-95 transition duration-200"
+                >
+                  Create
+                </button>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
-        <h2 className="text-lg text-white">Active Hours</h2>
-        <div className="flex gap-4">
-          <span>From</span>
-          <DatePicker
-            selected={startTiming}
-            onChange={(date) => setStartTiming(date)}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={60}
-            popperPlacement="right"
-            timeCaption="Time"
-            dateFormat="h:mm aa"
-            value={startTiming}
-            className="border-tblue border-2 min-w-0 w-28"
-          />
-          <span>To</span>
-          <DatePicker
-            selected={endTiming}
-            onChange={(date) => setEndTiming(date)}
-            minTime={startTiming}
-            maxTime={new Date().setHours(23)}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={60}
-            popperPlacement="right"
-            timeCaption="Time"
-            dateFormat="h:mm aa"
-            value={endTiming}
-            className="border-tblue border-2 min-w-0 w-28"
-          />
-        </div>
-        <h2 className="text-lg text-white">Slots:</h2>
-        <input
-          type="number"
-          value={slots}
-          min={1}
-          onChange={(e) => {
-            setSlots(e.target.value);
-          }}
-        ></input>
-        <h2 className="text-lg text-white">Location</h2>
-        <div className="flex justify-between gap-2 mb-2">
-          <input
-            type="text"
-            value={pincode}
-            onChange={(e) => {
-              setPincode(e.target.value);
-            }}
-          ></input>
-          <button className="text-black bg-primary" onClick={getPinLoaction}>
-            Get Pin Location
-          </button>
-          <button className="text-black bg-primary" onClick={getLocation}>
-            Get Location
-          </button>
-        </div>
-        <MapComponent lat={lat} setLat={setLat} lon={lon} setLon={setLon} />
-        <button
-          className="bg-primary py-2 px-4 rounded-full mb-16 mt-6"
-          onClick={addNewListing}
-        >
-          Add
-        </button>
-      </form>
-    </div>
+      </div>
+    </section>
   );
 }

@@ -15,9 +15,9 @@ export default function RangePicker() {
   } = useContext(DateContext);
 
   return (
-    <div className="rangePicker bg-gray flex px-6 py-4 mb-8 gap-8 text-black">
+    <div className="rangePicker text-white font-semibold bg-primary bg-opacity-95 flex px-6 py-8 mb-8 gap-8 rounded-xl">
       <div>
-        <h2>Select Date:</h2>
+        <h2 className="text-xl mb-2">Select Date:</h2>
         <DatePicker
           selected={selectedDate}
           onChange={(date) => setSelectedDate(date)}
@@ -25,10 +25,11 @@ export default function RangePicker() {
           maxDate={new Date().setDate(new Date().getDate() + 6)}
           dateFormat="dd/MM/yyyy"
           value={selectedDate}
+          className="text-darkgray text-lg rounded-xl py-1 px-4 outline-none"
         />
       </div>
       <div>
-        <h2>Select Time of Arrival:</h2>
+        <h2 className="text-xl mb-2">Select Time of Arrival:</h2>
         <DatePicker
           selected={startTime}
           onChange={(date) => setStartTime(date)}
@@ -38,10 +39,11 @@ export default function RangePicker() {
           timeCaption="Time"
           dateFormat="h:mm aa"
           value={startTime}
+          className="text-darkgray text-lg rounded-xl py-1 px-4 outline-none"
         />
       </div>
       <div>
-        <h2>Select Time of Departure:</h2>
+        <h2 className="text-xl mb-2">Select Time of Departure:</h2>
         <DatePicker
           selected={endTime}
           onChange={(date) => setEndTime(date)}
@@ -53,6 +55,7 @@ export default function RangePicker() {
           timeCaption="Time"
           dateFormat="h:mm aa"
           value={endTime}
+          className="text-darkgray text-lg rounded-xl py-1 px-4 outline-none"
         />
       </div>
     </div>

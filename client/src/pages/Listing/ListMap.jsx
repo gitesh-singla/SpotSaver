@@ -3,21 +3,17 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  Popup,
-  Circle,
-  useMap,
   Polyline,
 } from "react-leaflet";
 import L from "leaflet";
 
 function ListMap({ spot, location, coordinates }) {
-  // console.log(spot);
   return (
       <MapContainer
         center={[spot.location.lat, spot.location.lon]}
         zoom={13}
         scrollWheelZoom={true}
-        className="h-full w-full"
+        className="h-[400px] w-full"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

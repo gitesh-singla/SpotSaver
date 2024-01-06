@@ -26,7 +26,7 @@ export default function ReservationInfo({reservation}) {
       // console.log(formattedTimeRange); // Output: 11/15/23, 5:00 PM to 6:00 PM
       
   return (
-    <div className="resrevationTile bg-tblue w-full max-w-4xl p-4 rounded-xl text-white">
+    <div className="resrevationTile bg-primary w-full max-w-4xl p-4 rounded-xl text-white">
         <h2>{reservation.address}</h2>
         <p>{reservation.description}</p>
         <span className="mr-6">Rs. {reservation.cost}</span><span>{reservation.status}</span>

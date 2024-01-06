@@ -1,7 +1,6 @@
 import { Rating } from "react-simple-star-rating";
 
 export default function ReviewTile(props) {
-    
   function formatDateString(dateString) {
     const options = {
       year: "2-digit",
@@ -16,17 +15,20 @@ export default function ReviewTile(props) {
   }
 
   return (
-    <div className="max-w-xl">
-      <div className="flex justify-between">
-        <div className="font-bold text-lg">{props.name}</div>
-        <div className="font-light">{formatDateString(props.datePosted)}</div>
+    <div className="max-w-xl border-t-2 border-lightgray">
+      <div className="flex gap-2 items-center mt-2">
+        <img src="/user-review.svg" alt="#" width={"24px"} />
+        <div className="font-bold">{props.name}</div>
       </div>
       <Rating
-        SVGclassName={"inline-block"}
+        SVGclassName={"inline-block w-[22px]"}
         initialValue={props.rating}
         readonly
       />
-      <div>{props.review}</div>
+      <div className="font-semibold text-gray">
+        Reviewed on {formatDateString(props.datePosted)}
+      </div>
+      <div className="text-darkgray font-semibold">{props.review}</div>
     </div>
   );
 }
