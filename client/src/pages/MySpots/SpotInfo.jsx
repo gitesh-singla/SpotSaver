@@ -1,9 +1,79 @@
-export default function SpotInfo({spot}) {
+import { useState } from "react";
+
+export default function SpotInfo({ spot }) {
+  function formatDateString(dateString) {
+    const options = {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "numeric",
+      minute: "numeric",
+    };
+
+    const date = new Date(dateString);
+    return date.toLocaleString("en-IN", options);
+  }
+
+  function formatTimeRange(start, end) {
+    const formattedStart = formatDateString(start);
+    const formattedEnd = formatDateString(end);
+
+    const startTime = formattedStart.split(", ")[1];
+    const endTime = formattedEnd.split(", ")[1];
+
+    return `${startTime} to ${endTime}`;
+  }
+
+  const [statusSwitch, setStatusSwitch] = useState(spot.status);
+
+  function handleStatusSwitch(event) {
+    if(event.target.checked) {
+      setStatusSwitch("active");
+    } else {
+      setStatusSwitch("disabled");
+    }
+  }
+
+  function statusBGColor() {
+    return spot.status == "active" ? "bg-white" : "bg-lightgray";
+  }
+
   return (
-    <div className="spotTile bg-tblue w-full max-w-4xl p-4 rounded-xl text-white">
-        <h2>{spot.address}</h2>
-        <p>{spot.description}</p>
-        <span className="mr-6">Rs. {spot.price}/Hour</span><span>{spot.slots} slots</span>
+    <div className={`spotTile w-full p-4 rounded-xl shadow border-2 border-lightgray " + ${statusBGColor()}`}>
+      <h2 className="text-dark text-xl font-semibold mb-2">{spot.address}</h2>
+      <h2 className="text-gray text-xl">
+        Price:{" "}
+        <span className="font-semibold text-primary"> Rs {spot.price}/-</span>
+      </h2>
+      <h2 className="text-gray text-xl">
+        Active period:{" "}
+        <span className="font-semibold text-primary">
+          {formatTimeRange(spot.startTiming, spot.endTiming)}
+        </span>
+      </h2>
+      <h2 className="text-gray text-xl">
+        Total slots:{" "}
+        <span className="font-semibold text-primary">{spot.slots}</span>
+      </h2>
+      <div className="edit-disable flex mt-6 gap-4 items-center">
+        <button className="bg-gray text-white text-xl px-4 py-1 rounded-full hover:bg-primary active:scale-95 transition duration-200">Edit</button>
+        <div>
+          <input
+            className="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+            onChange={handleStatusSwitch}
+            checked={statusSwitch == "active"}
+          />
+          <label
+            className="inline-block pl-[0.15rem] hover:cursor-pointer"
+            htmlFor="flexSwitchCheckDefault"
+          >
+            {statusSwitch}
+          </label>
+        </div>
+      </div>
     </div>
-  )
+  );
 }

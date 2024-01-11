@@ -1,27 +1,16 @@
 import axios from "axios";
 import { useContext } from "react";
 import { userContext } from "../../Contexts/UserContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Profile() {
-  const { user, setUser, ready } = useContext(userContext);
+  const { user, setUser } = useContext(userContext);
 
   if (!user) {
     return <Navigate to={"/"} />;
   }
 
-  if (!ready) {
-    return (
-      <div className="bg-gray h-screen">
-        <h2
-          className="bg-white inline-block p-8 rounded-xl
-           text-lightgray text-xl font-semibold"
-        >
-          Loading
-        </h2>
-      </div>
-    );
-  }
+  const navigate = useNavigate();
 
   function logout() {
     try {
@@ -32,20 +21,55 @@ export default function Profile() {
     }
   }
 
-  return (
-    <div className="mt-8">
-      <div className="flex flex-col items-center">
-          <h2>Username: {user.name}</h2>
-          <h2>Email: {user.email}</h2>
-          <h2>Phone No: {user.phone}</h2>
-      </div>
+  function handleEdit () {
+    navigate("edit-user");
+  }
 
-      <button
-        className="bg-primary px-6 py-2 rounded-lg block mx-auto"
-        onClick={logout}
-      >
-        Logout
-      </button>
-    </div>
+  return (
+    <section className="section-container">
+      <div className="max-w-content w-full mt-8 border-x-2 border-dark px-8">
+        <div className="flex justify-between items-center  mb-8">
+          <h1 className="text-2xl font-semibold">Profile:</h1>
+          <button className="py-2 px-4 text-lg bg-primary text-white font-semibold rounded hover:bg-secondary active:scale-95 transition duration-200"
+          onClick={handleEdit}>Edit</button>
+        </div>
+        <div className="flex flex-col mb-4">  
+          <label className="leading-loose">Email: </label>
+          <input
+            type="text"
+            value={user.email}
+            className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
+            placeholder="Address"
+            disabled
+          />
+        </div>
+        <div className="flex flex-col mb-4">
+          <label className="leading-loose">Name: </label>
+          <input
+            type="text"
+            className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
+            placeholder="Address"
+            value={user.name}
+            disabled
+          />
+        </div>
+        <div className="flex flex-col mb-4">
+          <label className="leading-loose">Phone: </label>
+          <input
+            type="text"
+            value={user.phone}
+            className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
+            placeholder="Address"
+            disabled
+          />
+        </div>
+        <button
+          className="bg-primary px-6 py-2 rounded-lg block mx-auto"
+          onClick={logout}
+        >
+          Logout
+        </button>
+      </div>
+    </section>
   );
 }

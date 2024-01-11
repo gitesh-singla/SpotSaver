@@ -23,7 +23,7 @@ export default function RangeModifier({modifySearch}) {
         minDate={new Date()}
         maxDate={new Date().setDate(new Date().getDate() + 6)}
         dateFormat="dd/MM/yyyy"
-        className="border-gray border-2 min-w-0 px-2 py-1 w-28 outline-none"
+        className="border-lightgray rounded border-2 min-w-0 px-2 py-1 w-28 outline-none"
       />
       <h1 className="text-dark text-lg">From</h1>
       <DatePicker
@@ -34,7 +34,7 @@ export default function RangeModifier({modifySearch}) {
         timeIntervals={60}
         timeCaption="Time"
         dateFormat="h:mm aa"
-        className="border-gray border-2 min-w-0  px-2 py-1 w-28 outline-none"
+        className="border-lightgray rounded border-2 min-w-0  px-2 py-1 w-28 outline-none"
       />
       <h1 className="text-dark text-lg">To</h1>
       <DatePicker
@@ -47,7 +47,7 @@ export default function RangeModifier({modifySearch}) {
         timeIntervals={60}
         timeCaption="Time"
         dateFormat="h:mm aa"
-        className="border-gray border-2 min-w-0  px-2 py-1 w-28 outline-none"
+        className="border-lightgray rounded border-2 min-w-0  px-2 py-1 w-28 outline-none"
       />
     </div>
   );
