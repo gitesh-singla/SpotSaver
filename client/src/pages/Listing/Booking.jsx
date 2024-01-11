@@ -31,7 +31,7 @@ export default function Booking({ price }) {
         spot: id,
         start,
         end,
-        amount: cost
+        amount: cost,
       };
       await axios.post("http://localhost:4000/book", bookingData, {
         withCredentials: true,
@@ -64,23 +64,36 @@ export default function Booking({ price }) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-2 mb-8">
-      <div>
-        <h2>Date: {formatDateString(selectedDate)}</h2>
+    <div className="booking w-56 p-4 rounded-lg border-2 border-dark box-border flex flex-col">
+      <h1 className="text-center underline font-bold text-xl mb-2">
+        Booking Details:
+      </h1>
+      <div className="text-lg flex justify-between">
+        <span className="text-darkgray">Date:</span>{" "}
+        <span className="font-bold text-primary">
+          {formatDateString(selectedDate)}
+        </span>
       </div>
-      <div>
-        <h2>Time of Arrival: {formatTimeString(startTime)}</h2>
+      <div className="text-lg flex justify-between">
+        <span className="text-darkgray">From:</span>{" "}
+        <span className="font-bold text-primary">
+          {formatTimeString(startTime)}
+        </span>
       </div>
-      <div>
-        <h2>Time of Departure: {formatTimeString(endTime)}</h2>
+      <div className="text-lg flex justify-between">
+        <span className="text-darkgray">To:</span>{" "}
+        <span className="font-bold text-primary">
+          {formatTimeString(endTime)}
+        </span>
       </div>
-      <div>
-        <h2>Total Cost: Rs. {cost}</h2>
+      <div className="text-lg flex justify-between mb-4">
+        <span className="text-darkgray">Total Cost:</span>{" "}
+        <span className="font-bold text-primary">Rs. {cost}</span>
       </div>
       {!user && (
         <button
           onClick={handleBooking}
-          className="bg-tblue py-2 px-6 rounded-md text-white"
+          className="bg-tblue py-2 px-4 rounded-md bg-primary text-white self-center hover:scale-105 hover:opacity-90 active:scale-100 transition duration-200"
         >
           Login to Book
         </button>
@@ -88,7 +101,7 @@ export default function Booking({ price }) {
       {user && (
         <button
           onClick={handleBooking}
-          className="bg-tblue py-2 px-6 rounded-md text-white"
+          className="bg-tblue py-2 px-4 rounded-md bg-primary text-white self-center hover:scale-105 hover:opacity-90 active:scale-100 transition duration-200"
         >
           Book Now!
         </button>

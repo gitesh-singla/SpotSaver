@@ -15,7 +15,10 @@ export default function Reservations() {
       const { data } = await axios.get("http://localhost:4000/reservations", {
         withCredentials: true,
       });
-      setReservations(data);
+      const dateSorted = data.sort((a, b) => {
+        return a.start > b.start;
+      })
+      setReservations(dateSorted)
     } catch (error) {
       console.log(error.message);
     } finally {
@@ -34,13 +37,16 @@ export default function Reservations() {
   if (!user) {
     return <Navigate to={"/login"} />;
   }
+  
   return (
-    <div className="mt-8 flex flex-col items-center px-8 gap-4">
-      <h1 className="text-2xl font-bold">My Reservations:</h1>
-      {reservations.length > 0 &&
-        reservations.map((reservation) => {
-          return <ReservationInfo key={reservation._id} reservation={reservation} />;
-        })}
-    </div>
+    <section className="section-container">
+      <div className="pt-8 flex flex-col items-center px-8 gap-4 max-w-content w-full mt-2">
+        <h1 className="text-2xl font-bold">Reservations:</h1>
+        {reservations.length > 0 &&
+          reservations.map((reservation) => {
+            return <ReservationInfo key={reservation._id} reservation={reservation} />;
+          })}
+      </div>
+    </section>
   );
 }

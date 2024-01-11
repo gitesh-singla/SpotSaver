@@ -15,44 +15,40 @@ export default function RangeModifier({modifySearch}) {
   } = useContext(DateContext);
 
   return (
-    <div className="rangePicker bg-white flex px-6 py-4 gap-2 text-black items-center justify-between">
-      <div>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          minDate={new Date()}
-          maxDate={new Date().setDate(new Date().getDate() + 6)}
-          dateFormat="dd/MM/yyyy"
-          className="border-tblue border-2 min-w-0 w-28"
-        />
-      </div>
-      <div>
-        <DatePicker
-          selected={startTime}
-          onChange={(date) => setStartTime(date)}
-          showTimeSelect
-          showTimeSelectOnly
-          timeIntervals={60}
-          timeCaption="Time"
-          dateFormat="h:mm aa"
-          className="border-tblue border-2 min-w-0 w-28"
-        />
-      </div>
-      <div>
-        <DatePicker
-          selected={endTime}
-          onChange={(date) => setEndTime(date)}
-          showTimeSelect
-          showTimeSelectOnly
-          minTime={new Date(startTime)}
-          maxTime={new Date().setHours(23)}
-          timeIntervals={60}
-          timeCaption="Time"
-          dateFormat="h:mm aa"
-          className="border-tblue border-2 min-w-0 w-28"
-        />
-      </div>
-      <button className="bg-tblue text-white p-2 rounded-md" onClick={modifySearch}>Search</button>
+    <div className="rangePicker bg-white flex px-6 py-4 gap-2 text-darkgray scale-[101%] border-2 border-dark rounded-md items-center justify-center max-w-xl">
+      <h1 className="text-dark text-lg">On</h1>
+      <DatePicker
+        selected={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        minDate={new Date()}
+        maxDate={new Date().setDate(new Date().getDate() + 6)}
+        dateFormat="dd/MM/yyyy"
+        className="border-lightgray rounded border-2 min-w-0 px-2 py-1 w-28 outline-none"
+      />
+      <h1 className="text-dark text-lg">From</h1>
+      <DatePicker
+        selected={startTime}
+        onChange={(date) => setStartTime(date)}
+        showTimeSelect
+        showTimeSelectOnly
+        timeIntervals={60}
+        timeCaption="Time"
+        dateFormat="h:mm aa"
+        className="border-lightgray rounded border-2 min-w-0  px-2 py-1 w-28 outline-none"
+      />
+      <h1 className="text-dark text-lg">To</h1>
+      <DatePicker
+        selected={endTime}
+        onChange={(date) => setEndTime(date)}
+        showTimeSelect
+        showTimeSelectOnly
+        minTime={new Date(startTime)}
+        maxTime={new Date().setHours(23)}
+        timeIntervals={60}
+        timeCaption="Time"
+        dateFormat="h:mm aa"
+        className="border-lightgray rounded border-2 min-w-0  px-2 py-1 w-28 outline-none"
+      />
     </div>
   );
 }

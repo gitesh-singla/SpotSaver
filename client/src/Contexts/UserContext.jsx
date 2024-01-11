@@ -18,11 +18,10 @@ export function UserContextProvider({ children }) {
         setReady(true);
       })
       .catch((error) => {
-        setUser(null);
         setReady(true);
         console.log(error.message);
       });
-  }, [user]);
+  }, []);
 
   return (
     <userContext.Provider

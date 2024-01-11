@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import L from "leaflet";
+import L, { marker } from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 
@@ -15,7 +15,7 @@ function MapComponent({lat, setLat, lon, setLon}) {
     <MapContainer
       center={[lat, lon]}
       zoom={13}
-      style={{ height: "400px", width: "100%" }}
+      style={{ height: "400px", width: "90%", marginLeft: "5%"}}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -42,6 +42,15 @@ const DropPin = ({ position, onDragEnd }) => {
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   });
+  
+  const markerRef = useRef(null);
+
+  useEffect(() => {
+    // Open the popup when the component mounts
+    if (markerRef.current) {
+      markerRef.current.openPopup();
+    }
+  }, []);
 
   return (
     <Marker
@@ -51,8 +60,9 @@ const DropPin = ({ position, onDragEnd }) => {
       eventHandlers={{
         dragend: onDragEnd,
       }}
+      ref={markerRef}
     >
-      <Popup>Drag the pin to desired location</Popup>
+      <Popup >Drag the pin to desired location</Popup>
     </Marker>
   );
 };

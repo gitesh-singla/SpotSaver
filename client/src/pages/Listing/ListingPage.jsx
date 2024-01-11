@@ -6,12 +6,14 @@ import ListMap from "./ListMap";
 import { FadeLoader } from "react-spinners";
 import Booking from "./Booking";
 import ReviewSection from "./ReviewSection";
+import Images from "./Images";
 
 export default function ListingPage() {
   const { id } = useParams();
   const [spot, setSpot] = useState(null);
 
   const { lat, lon, setLat, setLon } = useContext(userContext);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
 
   useEffect(() => {
     if (!lat || !lon) {
@@ -46,64 +48,61 @@ export default function ListingPage() {
 
   if (spot) {
     return (
-      <>
-        <main>
-          <div className="divide w-full">
-            <div
-              id="map-sec"
-              className="w-[240px] h-[240px]"
-            >
-              {spot && (
-                <ListMap
-                  spot={spot}
-                  location={[lat, lon]}
-                  coordinates={spot.coordinates?.map((coord) => {
-                    return [coord[1], coord[0]];
-                  })}
-                />
-              )}
+      <section className="section-container">
+        <div className="max-w-content w-full px-6 py-12">
+          <h1 className="text-left text-3xl font-bold mb-2">{spot.address}</h1>
+          <div className="bg-secondary h-2 mb-4"></div>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <img src="/phone.svg" alt="#" width={"20px"} />
+              <h2>{spot.phone}</h2>
             </div>
-
-
-            <div
-              id="list-sec"
-              className="bg-[#f9f9f9] overflow-y-auto "
-            >
-              <div className="bg-[#2963a3] h-16 text-white text-2xl text-center leading-[64px] font-bold">
-                {spot.address}
-              </div>
-              <div className="listing-cards font-semibold text-lg overflow-y-auto h-[80%] overflow-x-hidden gap-4 mt-8 flex flex-col pl-4">
-                <div className="border-b-4 border-blue-500">
-                  Price: Rs {spot.price} / Hour
-                </div>
-                <div className="border-b-4 border-blue-500">
-                  Description:
-                  <p>{spot.description}</p>
-                </div>
-                <div className="border-b-4 border-blue-500">
-                  Owner: {spot.name}
-                  <div>contact: {spot.phone}</div>
-                </div>
-                {spot.distance && (
-                  <div className="border-b-4 border-blue-500">
-                    Distance: {(spot.distance / 1000).toFixed(2)}Km
-                  </div>
-                )}
-                {spot.duration && (
-                  <div className="border-b-4 border-blue-500">
-                    ETA: {(spot.duration / 60).toFixed(2)}min
-                  </div>
-                )}
-                <div>
-                  <Booking price={spot.price} />
-                </div>
-              </div>
+            <div className="flex gap-1 items-center">
+              <img src="/star.svg" alt="#" width={"24px"} />
+              <h2>{spot.rating} <a href="#reviews" className="underline">({spot.ratingCount} ratings)</a></h2>
             </div>
-
-            <ReviewSection />
           </div>
-        </main>
-      </>
+          <div className="booking-detail gap-4 mt-4 flex mb-8">
+            <div className="spot-detail flex-1">
+              <div className="flex gap-2 items-center">
+                <img src="/stop.svg" alt="#" width={"40px"} />
+                <h2 className="text-xl">{spot.slots} total spots</h2>
+              </div>
+              <div className="flex gap-2 items-center">
+                <img src="/car.svg" alt="#" width={"40px"} />
+                <h2 className="text-xl">{spot.type} vehicles allowed</h2>
+              </div>
+              <h2 className="text-lg max-h-36 h-40 text-ellipsis mt-2">
+                {spot.description}
+              </h2>
+            </div>
+            <Booking price={spot.price} />
+          </div>
+          {spot.images && <Images images={spot.images} isViewerOpen={isViewerOpen} setIsViewerOpen={setIsViewerOpen}/>}
+          <h2 className="text-xl font-semibold mb-2">Navigation</h2>
+          <div className="h-[2px] bg-gray mb-4"></div>
+          <div className="flex gap-4 items-center font-semibold text-lg mb-4">
+            <div className="flex gap-2 items-center">
+              <img src="/clock.svg" alt="#" width={"30px"} />
+              <h2>{Math.round(spot.duration / 60)}min</h2>
+            </div>
+            <div className="flex gap-1 items-center">
+              <img src="/distance.svg" alt="#" width={"30px"} />
+              <h2>{(spot.distance / 1000).toFixed(2)} Km</h2>
+            </div>
+          </div>
+          {spot && !isViewerOpen && (
+            <ListMap
+              spot={spot}
+              location={[lat, lon]}
+              coordinates={spot.coordinates?.map((coord) => {
+                return [coord[1], coord[0]];
+              })}
+            />
+          )}
+          <ReviewSection />
+        </div>
+      </section>
     );
   }
 }

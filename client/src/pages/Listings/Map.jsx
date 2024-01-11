@@ -11,15 +11,11 @@ import { useNavigate } from "react-router-dom";
 
 function Map({ spots, location, setHoveredIndex, hoveredIndex }) {
   return (
-    <section
-      id="map-sec"
-      className="fixed top-[57px] right-0 left-0 bottom-[52px] w-full h-full z-0"
-    >
       <MapContainer
         center={location}
         zoom={13}
         scrollWheelZoom={true}
-        className="h-full w-full"
+        className="h-full w-full z-0"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -41,7 +37,6 @@ function Map({ spots, location, setHoveredIndex, hoveredIndex }) {
           })}
         <RecenterAutomatically location={location} />
       </MapContainer>
-    </section>
   );
 }
 

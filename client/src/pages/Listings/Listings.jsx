@@ -10,6 +10,7 @@ function Listings() {
   const [spots, setSpots] = useState([]);
   const [city, setCity] = useState("");
   const [pincode, setPincode] = useState();
+  const [pinSearch, setPinSearch] = useState(true);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const { lat, setLat, lon, setLon } = useContext(userContext);
@@ -17,7 +18,7 @@ function Listings() {
 
   useEffect(() => {
     searchSpots();
-  }, [lat, lon, city]);
+  }, [lat, lon, city, pinSearch]);
 
   useEffect(() => {
     if (!lat || !lon) getLocation();
@@ -56,9 +57,7 @@ function Listings() {
       if (response.status === 200) {
         const data = response.data;
         if (data.address) {
-          console.log(data.address);
           setCity(data.address.state_district.split(" ")[0]);
-          return "success";
         } else {
           throw new Error("Pincode not found");
         }
@@ -77,6 +76,7 @@ function Listings() {
     setLat(+data[0].lat);
     setLon(+data[0].lon);
     await coordinatesToCity(data[0].lat, data[0].lon);
+    setPinSearch(!pinSearch)
   }
 
   async function searchSpots() {
@@ -110,112 +110,103 @@ function Listings() {
     setSpots(arr);
   }
 
+  function handleKeyPincode(event) {
+    if(event.key == 'Enter') getpinLoaction();
+  }
+
   return (
-    <>
-      <main className="absolute top-57 right-0 left-0 bottom-0 overflow-hidden">
-        <div className="Search fixed top-[72px] left-[37px] flex flex-col bg-white rounded-md shadow-sh z-10 m-4">
-          {/* //searchCard */}
+    <div className="flex-1 flex items-stretch">
+      {/* filter */}
+      {/* <div className="filter fixed bottom-0 left-0 z-30 m-[1.25em] block w-[70%]">
+            <button className="py-[0.625em] px-[2.5em] rounded-md flex items-center bg-[#2963a3] text-white my-0 mx-auto shadow-sh shadow-lg">
+              <img className="h-6" src="filter-svg.svg" />
+              <div className="text-2xl pl-[0.25em]">Filter</div>
+            </button>
+          </div> */}
+      <div id="map-sec" className="flex-1 relative">
+        <Map
+          spots={spots}
+          location={[lat, lon]}
+          setHoveredIndex={setHoveredIndex}
+          hoveredIndex={hoveredIndex}
+        />
+        <div className="Search absolute top-2 left-14 flex flex-col bg-primary rounded-md shadow-sh z-10 text-white">
+          <RangeModifier modifySearch={searchSpots}/>
           <div className="Search-details p-2 px-4 flex felx-col gap-4 items-center justify-center">
             <button
-              className="bg-primary p-3 rounded-full"
+              className="bg-white p-2 rounded-full hover:scale-105 active:scale-100"
               onClick={getLocation}
             >
               <img
                 className="h-[1.25rem]  flex justify-between "
                 src="/location-svg.svg"
-                alt=""
+                alt="#"
               />
             </button>
-            <span className="">OR</span>
+            <span className="text-base">Or</span>
             <input
               type="text"
               value={pincode}
               onChange={(e) => setPincode(e.target.value)}
+              onKeyDown={handleKeyPincode}
               name="pincode"
               id="pincode"
               placeholder="Enter Pincode"
-              className="border-primary border-2 p-1"
+              className="py-1 px-2 outline-none text-dark rounded-lg min-2-0 w-32"
             ></input>
             <button
-              className="Search-button bg-[#f35141] p-3 rounded-full shadow-lg"
+              className="Search-button bg-white p-2 rounded-full shadow-lg hover:scale-105 active:scale-100"
               onClick={getpinLoaction}
             >
-              <img className="h-[1.25rem]" src="/search-svg.svg" alt="" />
+              <img className="h-[1.25rem]" src="/search-svg.svg" alt="#" />
             </button>
           </div>
-          <RangeModifier modifySearch={searchSpots} />
         </div>
-        {/* filter */}
-        <div className="filter fixed bottom-0 left-0 z-30 m-[1.25em] block w-[70%]">
-          <button className="py-[0.625em] px-[2.5em] rounded-md flex items-center bg-[#2963a3] text-white my-0 mx-auto shadow-sh shadow-lg">
-            <img className="h-6" src="filter-svg.svg" />
-            <div className="text-2xl pl-[0.25em]">Filter</div>
-          </button>
-        </div>
-        <div className="divide w-full flex">
-          <section
-            id="map-sec"
-            className="fixed top-[57px] right-0 left-0 bottom-[52px] w-full h-full z-0"
-          >
-            <Map
-              spots={spots}
-              location={[lat, lon]}
-              setHoveredIndex={setHoveredIndex}
-              hoveredIndex={hoveredIndex}
-            />
-          </section>
+      </div>
 
-          <section
-            id="list-sec"
-            className="w-[450px] h-full fixed top-[57px] right-0 z-10 bg-[#f9f9f9]"
+      <div id="list-sec" className="max-w-md min-w-[400px] flex-1">
+        <ul className="flex justify-around gap-4 p-2 bg-white shadow-sh">
+          <li
+            className="text-xl  text-[#999999] cursor-pointer"
+            onClick={sortByDistance}
           >
-            <header>
-              <ul className="flex justify-between p-[1em] z-20 bg-white mt-0 shadow-sh  ">
-                <li className="text-xl  text-[#999999]">Sort By:</li>
-                <li
-                  className="text-xl  text-[#999999] cursor-pointer"
-                  onClick={sortByDistance}
-                >
-                  Distance
-                </li>
-                <li
-                  className="text-xl  text-[#999999] cursor-pointer"
-                  onClick={sortByPrice}
-                >
-                  Price
-                </li>
-                <li
-                  className="text-xl  text-[#999999] cursor-pointer"
-                  onClick={sortByRating}
-                >
-                  Rating
-                </li>
-              </ul>
-            </header>
-            <div className="listing-cards overflow-y-auto h-[80%] overflow-x-hidden">
-              {spots &&
-                spots.map((spot, index) => {
-                  return (
-                    <List
-                      address={spot.address}
-                      distance={spot.distance}
-                      slots={spot.slots}
-                      _id={spot._id}
-                      key={spot._id}
-                      price={spot.price}
-                      rating={spot.rating}
-                      hoveredIndex={hoveredIndex}
-                      setHoveredIndex={setHoveredIndex}
-                      index={index}
-                    />
-                  );
-                })}
-              {(!spots || spots.length == 0) && <h3>No spots available</h3>}
-            </div>
-          </section>
+            Distance
+          </li>
+          <li
+            className="text-xl  text-[#999999] cursor-pointer"
+            onClick={sortByPrice}
+          >
+            Price
+          </li>
+          <li
+            className="text-xl  text-[#999999] cursor-pointer"
+            onClick={sortByRating}
+          >
+            Rating
+          </li>
+        </ul>
+        <div className="listing-cards overflow-y-auto p-4">
+          {spots &&
+            spots.map((spot, index) => {
+              return (
+                <List
+                  address={spot.address}
+                  distance={spot.distance}
+                  slots={spot.slots}
+                  _id={spot._id}
+                  key={spot._id}
+                  price={spot.price}
+                  rating={spot.rating}
+                  hoveredIndex={hoveredIndex}
+                  setHoveredIndex={setHoveredIndex}
+                  index={index}
+                />
+              );
+            })}
+          {(!spots || spots.length == 0) && <h3>No spots available</h3>}
         </div>
-      </main>
-    </>
+      </div>
+    </div>
   );
 }
 
