@@ -16,6 +16,7 @@ const addReview = require("../controllers/addReview");
 const getReviews = require("../controllers/getReviews");
 const editUser = require("../controllers/editUser");
 const changePassword = require("../controllers/changePassword");
+const cancelReservation = require("../controllers/cancelReservation");
 
 router.post("/login", login);
 router.post("/register", register);
@@ -31,5 +32,6 @@ router.post("/addreview", useAuth, addReview);
 router.get("/getreviews", getReviews);
 router.patch("/edituser", useAuth, editUser);
 router.patch("/changepassword", useAuth, changePassword);
+router.delete("/cancelreservation", useAuth, cancelReservation);
 
 module.exports = router;

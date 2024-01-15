@@ -41,7 +41,7 @@ export default function Reservations() {
   return (
     <section className="section-container">
       <div className="pt-8 flex flex-col items-center px-8 gap-4 max-w-content w-full mt-2">
-        <h1 className="text-2xl font-bold">Reservations:</h1>
+        <h1 className="text-2xl text-gray font-bold">Reservations:</h1>
         {reservations.length > 0 &&
           reservations.map((reservation) => {
             return <ReservationInfo key={reservation._id} reservation={reservation} />;
