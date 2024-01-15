@@ -17,6 +17,8 @@ const getReviews = require("../controllers/getReviews");
 const editUser = require("../controllers/editUser");
 const changePassword = require("../controllers/changePassword");
 const cancelReservation = require("../controllers/cancelReservation");
+const editSpot = require("../controllers/editSpot");
+const deleteSpot = require("../controllers/deleteSpot");
 
 router.post("/login", login);
 router.post("/register", register);
@@ -33,5 +35,7 @@ router.get("/getreviews", getReviews);
 router.patch("/edituser", useAuth, editUser);
 router.patch("/changepassword", useAuth, changePassword);
 router.delete("/cancelreservation", useAuth, cancelReservation);
+router.patch("/editspot", useAuth, editSpot);
+router.delete("/deleteSpot", useAuth, deleteSpot);
 
 module.exports = router;
