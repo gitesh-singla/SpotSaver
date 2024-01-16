@@ -4,6 +4,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 require('dotenv').config()
 const router = require("./routes/routes");
+const reservationStatusScheduler = require('./utils/reservationStatusScheduler')
 
 const app = express()
 
@@ -14,6 +15,7 @@ app.use(cors({
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.static('uploads'))
+reservationStatusScheduler.start();
 
 async function runMongo() {
     try {
@@ -26,5 +28,6 @@ async function runMongo() {
 }
 runMongo();
 
-app.use('/', router)
+app.use('/', router);
+
 
