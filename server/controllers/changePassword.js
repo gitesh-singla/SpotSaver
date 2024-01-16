@@ -3,7 +3,8 @@ const bcrypt = require('bcrypt');
 const bcryptSalt = bcrypt.genSaltSync(10)
 
 const changePassword = async (req, res) => {
-    const { jwtResponse, oldPassword, newPassword } = req.body;
+    const { oldPassword, newPassword } = req.body;
+    const {jwtResponse} = req;
 
     try {
         const userExists = await Users.findById(jwtResponse._id);
@@ -13,17 +14,17 @@ const changePassword = async (req, res) => {
 
             if (passwordValid) {
                 userExists.password = bcrypt.hashSync(newPassword, bcryptSalt);
-                userExists.save();
+                await userExists.save();
                 res.cookie('authToken', '').send("password changed");
             } else {
-                throw ("incorrect");
+                throw ("incorrect password");
             }
         } else {
             throw ("user not found");
         }
     } catch (error) {
         console.log(error, "in changePassword");
-        res.status(422).send(error.message);
+        res.status(400).send(error);
     }
 }
 
