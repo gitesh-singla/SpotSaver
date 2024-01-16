@@ -11,11 +11,11 @@ export default function ReviewTile(props) {
     };
 
     const date = new Date(dateString);
-    return date.toLocaleString("en-US", options);
+    return date.toLocaleString("en-IN", options);
   }
 
   return (
-    <div className="max-w-xl border-t-2 border-lightgray">
+    <div className="border-t-2 border-lightgray mb-2">
       <div className="flex gap-2 items-center mt-2">
         <img src="/user-review.svg" alt="#" width={"24px"} />
         <div className="font-bold">{props.name}</div>
