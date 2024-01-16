@@ -7,7 +7,7 @@ export default function HomePage() {
   const { startTime, endTime } = useContext(DateContext);
 
   return (
-    <section className="section-container bg-home-cityscape bg-bottom bg-contain bg-no-repeat mt-6 noselect">
+    <section className="section-container bg-bottom bg-contain bg-no-repeat mt-6 noselect" style={{backgroundImage: "url('home-city.jpg')"}}>
       <div className="max-w-content mb-20" se>
         <div className="heading text-dark mb-12">
           <h1 className="heading-title text-[6.25rem] tracking-widest text-center font-black mb-[-3.125rem]">

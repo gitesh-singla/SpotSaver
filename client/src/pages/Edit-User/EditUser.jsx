@@ -1,9 +1,14 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { userContext } from "../../Contexts/UserContext";
+import { Navigate } from "react-router-dom";
 
 export default function EditUser() {
-  const { user, setUser } = useContext(userContext);
+  const { user } = useContext(userContext);
+
+  if(!user) {
+    return <Navigate to={"/"}/>
+  }
 
   const [changePassword, setChangePassword] = useState(false);
   const [nameEdit, setNameEdit] = useState(user.name);
@@ -13,12 +18,28 @@ export default function EditUser() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   async function handleSave() {
-    // try {
-    //     await axios.patch("http://localhost:4000/edituser", {name: nameEdit, phone: phoneEdit}, {withCredentials: true});
-    // } catch (error) {
-    //     console.log(error.data);
-    // }
-    console.log("handleSave() in editUser");
+    try {
+      if (!changePassword) {
+        if(nameEdit == "" || phoneEdit == "") throw ("Name or Phone missing!")
+        await axios.patch(
+          "http://localhost:4000/edituser",
+          { name: nameEdit, phone: phoneEdit },
+          { withCredentials: true }
+        );
+        window.location.reload();
+      }
+      if (changePassword) {
+        if(newPassword != confirmPassword) throw ("Passwords dont match!")
+        await axios.patch(
+          "http://localhost:4000/changepassword",
+          { oldPassword, newPassword },
+          { withCredentials: true }
+        );
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error, "handleSave() in editUser");
+    }
   }
 
   function togglePasswordChange() {
@@ -74,7 +95,10 @@ export default function EditUser() {
                 }}
               />
             </div>
-            <button className="py-2 px-4 text-lg bg-secondary text-white font-semibold rounded hover:bg-primary active:scale-95 transition duration-200" onClick={togglePasswordChange}>
+            <button
+              className="py-2 px-4 text-lg bg-secondary text-white font-semibold rounded hover:bg-primary active:scale-95 transition duration-200"
+              onClick={togglePasswordChange}
+            >
               Change Password
             </button>
           </>
@@ -88,7 +112,7 @@ export default function EditUser() {
                 type="password"
                 value={oldPassword}
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
-                placeholder="Address"
+                placeholder="Current Password"
                 onChange={(e) => {
                   setOldPassword(e.target.value);
                 }}
@@ -100,7 +124,7 @@ export default function EditUser() {
                 type="password"
                 value={newPassword}
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
-                placeholder="Address"
+                placeholder="New Password"
                 onChange={(e) => {
                   setNewPassword(e.target.value);
                 }}
@@ -112,13 +136,16 @@ export default function EditUser() {
                 type="password"
                 value={confirmPassword}
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
-                placeholder="Address"
+                placeholder="Confirm Pasasword"
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
                 }}
               />
             </div>
-            <button className="py-2 px-4 text-lg bg-secondary text-white font-semibold rounded hover:bg-primary active:scale-95 transition duration-200" onClick={togglePasswordChange}>
+            <button
+              className="py-2 px-4 text-lg bg-secondary text-white font-semibold rounded hover:bg-primary active:scale-95 transition duration-200"
+              onClick={togglePasswordChange}
+            >
               Go Back
             </button>
           </>
