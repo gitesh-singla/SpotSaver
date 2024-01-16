@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
+import ReviewModal from "./ReviewModal";
 
 export default function ReservationInfo({ reservation }) {
   const [confirm, setConfirm] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
   function formatDateString(dateString) {
     const options = {
@@ -52,60 +54,78 @@ export default function ReservationInfo({ reservation }) {
   };
 
   return (
-    <div
-      className={`relative resrevationTile w-full p-4 rounded-xl bg-white border-l-8 border-2 shadow border-lightgray hover:translate-x-2 transition duration-200 border-opacity-75 ${statusColor(
-        reservation.status
-      )}`}
-    >
-      <h2 className="text-dark text-xl font-semibold mb-2">
-        {reservation.address}
-      </h2>
-      <h2 className="text-gray text-xl">
-        Amount Paid:{" "}
-        <span className="font-semibold text-primary">
-          {" "}
-          Rs {reservation.cost}/-
-        </span>
-      </h2>
-      <h2 className="text-gray text-xl">
-        Reservation period:{" "}
-        <span className="font-semibold text-primary">{formattedTimeRange}</span>
-      </h2>
-      <h2 className="text-gray text-xl">
-        Status:{" "}
-        <span className="font-semibold text-primary">{reservation.status}</span>
-      </h2>
-      {!confirm && (
-        <button
-          id={"cancel" + reservation._id}
-          className="bg-red-500 mt-6 text-white text-xl px-4 py-1 rounded-full hover:bg-red-600 active:scale-95 transition duration-200"
-          onClick={() => {
-            setConfirm(true);
-          }}
-          disabled={reservation.status != "active"}
-        >
-          Cancel
-        </button>
-      )}
-      {confirm && (
-        <div>
-          <span className="text-gray text-xl mr-2">Confirm: </span>
-          <button
-            className="bg-lightgray mt-2 text-white text-xl px-4 py-1 rounded-full hover:bg-gray active:scale-95 transition duration-200 mr-2"
-            onClick={handleCancel}
-          >
-            Yes
-          </button>
-          <button
-            className="bg-lightgray mt-2 text-white text-xl px-4 py-1 rounded-full hover:bg-gray active:scale-95 transition duration-200"
-            onClick={() => {
-              setConfirm(false);
-            }}
-          >
-            No
-          </button>
-        </div>
-      )}
-    </div>
+    <>
+      <div
+        className={`relative resrevationTile w-full p-4 rounded-xl bg-white border-l-8 border-2 shadow border-lightgray hover:translate-x-2 transition duration-200 border-opacity-75 ${statusColor(
+          reservation.status
+        )}`}
+      >
+        <h2 className="text-dark text-xl font-semibold mb-2">
+          {reservation.address}
+        </h2>
+        <h2 className="text-gray text-xl">
+          Amount Paid:{" "}
+          <span className="font-semibold text-primary">
+            {" "}
+            Rs {reservation.cost}/-
+          </span>
+        </h2>
+        <h2 className="text-gray text-xl">
+          Reservation period:{" "}
+          <span className="font-semibold text-primary">
+            {formattedTimeRange}
+          </span>
+        </h2>
+        <h2 className="text-gray text-xl">
+          Status:{" "}
+          <span className="font-semibold text-primary">
+            {reservation.status}
+          </span>
+        </h2>
+        {!confirm && (
+          <>
+            <button
+              id={"cancel" + reservation._id}
+              className="bg-red-500 mt-6 text-white text-xl px-4 py-1 rounded-full hover:bg-red-600 active:scale-95 transition duration-200"
+              onClick={() => {
+                setConfirm(true);
+              }}
+              disabled={reservation.status != "active"}
+            >
+              Cancel
+            </button>
+            {reservation.status == "completed" && !reservation.reviewed && (
+              <button
+                className="bg-gray mt-2 ml-2 text-white text-xl px-4 py-1 rounded-full hover:bg-lightgray active:scale-95 transition duration-200"
+                onClick={() => setReviewModalOpen(true)}
+              >
+                Add Review
+              </button>
+            )}
+          </>
+        )}
+
+        {confirm && (
+          <div>
+            <span className="text-gray text-xl mr-2">Confirm: </span>
+            <button
+              className="bg-lightgray mt-2 text-white text-xl px-4 py-1 rounded-full hover:bg-gray active:scale-95 transition duration-200 mr-2"
+              onClick={handleCancel}
+            >
+              Yes
+            </button>
+            <button
+              className="bg-lightgray mt-2 text-white text-xl px-4 py-1 rounded-full hover:bg-gray active:scale-95 transition duration-200"
+              onClick={() => {
+                setConfirm(false);
+              }}
+            >
+              No
+            </button>
+          </div>
+        )}
+      </div>
+      {reviewModalOpen && <ReviewModal setReviewModalOpen={setReviewModalOpen} reservation_id={reservation._id} spot_id={reservation.spot}/>}
+    </>
   );
 }

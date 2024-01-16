@@ -26,6 +26,7 @@ const book = async (req, res) => {
                     start,
                     end,
                     amount,
+                    reviewed: false,
                 })
                 res.json(bookingInfo)
             } else {
