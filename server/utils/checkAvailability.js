@@ -1,9 +1,10 @@
 const Bookings = require("../models/Bookings");
 const Spots = require("../models/Spots");
 
-async function checkAvailability(spot, slots, start, end) {
+async function checkAvailability(spot, slots, status,  start, end) {
     const {startTiming, endTiming} = await Spots.findById(spot);
 
+    if(status != "active") return false;
     if (start >= end) return false;
     let startAdjusted = new Date(startTiming);
     startAdjusted.setHours(new Date(start).getHours());
@@ -16,6 +17,7 @@ async function checkAvailability(spot, slots, start, end) {
     const booked = await Bookings.find({
         spot: spot,
         start: { $lt: end },
+        status: "active",
         end: { $gt: start }
     })
     // console.log(booked.length, slots);

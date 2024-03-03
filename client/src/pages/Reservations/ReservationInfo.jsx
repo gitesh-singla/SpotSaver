@@ -82,7 +82,7 @@ export default function ReservationInfo({ reservation }) {
             {reservation.status}
           </span>
         </h2>
-        {!confirm && (
+        {!confirm && reservation.status == "active" && (
           <>
             <button
               id={"cancel" + reservation._id}

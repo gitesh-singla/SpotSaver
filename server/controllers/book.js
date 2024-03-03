@@ -15,8 +15,8 @@ const book = async (req, res) => {
         }
         const spotExists = await Spots.findOne({ _id: spot });
         if (spotExists) {
-            const { slots } = spotExists;
-            const available = await checkAvailability(spot, slots, start, end);
+            const { slots, status } = spotExists;
+            const available = await checkAvailability(spot, slots, status,  start, end);
             if (available) {
                 const bookingInfo = await Bookings.create({
                     spot,

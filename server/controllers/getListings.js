@@ -8,7 +8,7 @@ const getListings = async (req, res) => {
         if (startTime >= endTime) throw ("Invalid Time Range.");
         const allSpots = await Spots.find({ city: city }).lean()
         let spots = await Promise.all(allSpots.map(async spot => {
-            const available = await checkAvailability(spot._id, spot.slots, startTime, endTime);
+            const available = await checkAvailability(spot._id, spot.slots, spot.status,  startTime, endTime);
             return {
                 ...spot,
                 distance: calculateDistance(lat, lon, spot.location.lat, spot.location.lon).toFixed(2),
