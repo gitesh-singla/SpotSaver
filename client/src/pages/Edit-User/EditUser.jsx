@@ -2,12 +2,13 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { userContext } from "../../Contexts/UserContext";
 import { Navigate } from "react-router-dom";
+import validateInput from "./validateInput";
 
 export default function EditUser() {
   const { user } = useContext(userContext);
 
-  if(!user) {
-    return <Navigate to={"/"}/>
+  if (!user) {
+    return <Navigate to={"/"} />;
   }
 
   const [changePassword, setChangePassword] = useState(false);
@@ -16,11 +17,24 @@ export default function EditUser() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState({});
 
   async function handleSave() {
+    let formData = {
+      name: nameEdit,
+      phone: phoneEdit,
+      oldPassword,
+      newPassword,
+      confirmPassword,
+    };
+    let validate = validateInput(formData);
+    setErrors(validate);
+
     try {
+      if (Object.keys(validate).length != 0) throw "Invalid input";
+
       if (!changePassword) {
-        if(nameEdit == "" || phoneEdit == "") throw ("Name or Phone missing!")
+        if (nameEdit == "" || phoneEdit == "") throw "Name or Phone missing!";
         await axios.patch(
           "http://localhost:4000/edituser",
           { name: nameEdit, phone: phoneEdit },
@@ -29,7 +43,7 @@ export default function EditUser() {
         window.location.reload();
       }
       if (changePassword) {
-        if(newPassword != confirmPassword) throw ("Passwords dont match!")
+        if (newPassword != confirmPassword) throw "Passwords dont match!";
         await axios.patch(
           "http://localhost:4000/changepassword",
           { oldPassword, newPassword },
@@ -38,6 +52,12 @@ export default function EditUser() {
         window.location.reload();
       }
     } catch (error) {
+      if (error.response.data == "incorrect password") {
+        setErrors({ oldPassword: error.response.data });
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      }
       console.log(error, "handleSave() in editUser");
     }
   }
@@ -67,31 +87,57 @@ export default function EditUser() {
                 type="text"
                 value={user.email}
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
-                placeholder="Address"
+                placeholder="Email"
                 disabled
               />
             </div>
             <div className="flex flex-col mb-4">
               <label className="leading-loose">Name: </label>
+              <p className="text-sm font-normal text-red-500">{errors.name}</p>
               <input
                 type="text"
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
-                placeholder="Address"
+                placeholder="Name"
                 value={nameEdit}
                 onChange={(e) => {
-                  setNameEdit(e.target.value);
+                  let str = e.target.value;
+                  if (str == "" || str.match(/^ *$/) !== null) {
+                    setErrors({
+                      ...errors,
+                      name: "Name can't be empty",
+                    });
+                  } else {
+                    const newError = { ...errors };
+                    delete newError.name;
+                    setErrors(newError);
+                  }
+                  setNameEdit(str);
                 }}
               />
             </div>
             <div className="flex flex-col mb-4">
               <label className="leading-loose">Phone: </label>
+              <p className="text-sm font-normal text-red-500">
+                {errors.phoneEdit}
+              </p>
               <input
                 type="text"
                 value={phoneEdit}
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
-                placeholder="Address"
+                placeholder="Phone"
                 onChange={(e) => {
-                  setPhoneEdit(e.target.value);
+                  let str = e.target.value;
+                  if (str.match(/^\d+$/) == null) {
+                    setErrors({
+                      ...errors,
+                      phoneEdit: "Enter a valid phone number",
+                    });
+                  } else {
+                    const newError = { ...errors };
+                    delete newError.phoneEdit;
+                    setErrors(newError);
+                  }
+                  setPhoneEdit(str);
                 }}
               />
             </div>
@@ -108,37 +154,73 @@ export default function EditUser() {
           <>
             <div className="flex flex-col mb-4">
               <label className="leading-loose">Current Password: </label>
+              <p className="text-sm font-normal text-red-500">
+                {errors.oldPassword}
+              </p>
               <input
                 type="password"
                 value={oldPassword}
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
                 placeholder="Current Password"
                 onChange={(e) => {
-                  setOldPassword(e.target.value);
+                  let str = e.target.value;
+                  setErrors((prev) => {
+                    delete prev.oldPassword;
+                    return prev;
+                  });
+                  setOldPassword(str);
                 }}
               />
             </div>
             <div className="flex flex-col mb-4">
               <label className="leading-loose">New Password: </label>
+              <p className="text-sm font-normal text-red-500">
+                {errors.newPassword}
+              </p>
               <input
                 type="password"
                 value={newPassword}
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
                 placeholder="New Password"
                 onChange={(e) => {
-                  setNewPassword(e.target.value);
+                  let str = e.target.value;
+                  if (str.length < 8) {
+                    setErrors({
+                      ...errors,
+                      newPassword: "Password must be atleast 8 characters",
+                    });
+                  } else {
+                    const newError = { ...errors };
+                    delete newError.newPassword;
+                    setErrors(newError);
+                  }
+                  setNewPassword(str);
                 }}
               />
             </div>
             <div className="flex flex-col mb-4">
               <label className="leading-loose">Confirm Password: </label>
+              <p className="text-sm font-normal text-red-500">
+                {errors.confirmPassword}
+              </p>
               <input
                 type="password"
                 value={confirmPassword}
                 className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-dark disabled:text-gray"
                 placeholder="Confirm Pasasword"
                 onChange={(e) => {
-                  setConfirmPassword(e.target.value);
+                  let str = e.target.value;
+                  if (str != newPassword) {
+                    setErrors({
+                      ...errors,
+                      confirmPassword: "Passwords do not match",
+                    });
+                  } else {
+                    const newError = { ...errors };
+                    delete newError.confirmPassword;
+                    setErrors(newError);
+                  }
+                  setConfirmPassword(str);
                 }}
               />
             </div>

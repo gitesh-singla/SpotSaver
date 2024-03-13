@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import MapComponent from "./MapComponent";
+import validateListing from "./validateListing";
 
 export default function CreateListing() {
   const [address, setAddress] = useState("");
@@ -15,11 +16,12 @@ export default function CreateListing() {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const [pincode, setPincode] = useState("");
-  const [startTiming, setStartTiming] = useState();
+  const [startTiming, setStartTiming] = useState(new Date());
   const [endTiming, setEndTiming] = useState();
   const [type, setType] = useState("small");
   const [redirect, setRedirect] = useState("");
   const [imageFiles, setImageFiles] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const { user } = useContext(userContext);
 
@@ -46,6 +48,9 @@ export default function CreateListing() {
       lon,
     };
 
+    let validate = validateListing(address, slots, price);
+    setErrors(validate);
+
     formData.append("description", description);
     formData.append("address", address);
     formData.append("price", price);
@@ -61,6 +66,8 @@ export default function CreateListing() {
     });
 
     try {
+      if (Object.keys(validate).length != 0) throw "Invalid input";
+
       await axios.post("http://localhost:4000/addlisting", formData, {
         withCredentials: true,
         headers: {
@@ -69,7 +76,6 @@ export default function CreateListing() {
       });
       setRedirect("/myspots");
     } catch (error) {
-      alert(error.message);
       console.log(error);
     }
   }
@@ -127,7 +133,7 @@ export default function CreateListing() {
     <section className="section-container ">
       <div className=" max-w-[700px] w-full">
         <div className="flex flex-col sm:py-12">
-          <div className="">
+          <form className="">
             <h2 className="leading-relaxed font-semibold text-3xl text-gray-700">
               Add a spot
             </h2>
@@ -135,23 +141,51 @@ export default function CreateListing() {
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                 <div className="flex flex-col">
                   <label className="leading-loose">Address</label>
+                  <p className="text-sm font-normal text-red-500">
+                    {errors.address}
+                  </p>
                   <input
                     type="text"
                     className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                     placeholder="Address"
                     onChange={(e) => {
-                      setAddress(e.target.value);
+                      let val = e.target.value;
+                      if (val == "" || val.match(/^ *$/) !== null) {
+                        setErrors({
+                          ...errors,
+                          address: "Address can't be empty",
+                        });
+                      } else {
+                        const newError = { ...errors };
+                        delete newError.address;
+                        setErrors(newError);
+                      }
+                      setAddress(val);
                     }}
                   />
                 </div>
                 <div className="flex flex-col">
                   <label className="leading-loose">Price (per Hour)</label>
+                  <p className="text-sm font-normal text-red-500">
+                    {errors.price}
+                  </p>
                   <input
-                    type="text"
+                    type="number"
                     className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                     placeholder="Price"
                     onChange={(e) => {
-                      setPrice(e.target.value);
+                      let val = e.target.value;
+                      if (val == null || val <= 0) {
+                        setErrors({
+                          ...errors,
+                          price: "Enter a valid price",
+                        });
+                      } else {
+                        const newError = { ...errors };
+                        delete newError.price;
+                        setErrors(newError);
+                      }
+                      setPrice(val);
                     }}
                   />
                 </div>
@@ -184,7 +218,7 @@ export default function CreateListing() {
                       <DatePicker
                         selected={endTiming}
                         onChange={(date) => setEndTiming(date)}
-                        minTime={startTiming}
+                        minTime={new Date().setHours(startTiming.getHours())}
                         maxTime={new Date().setHours(23)}
                         showTimeSelect
                         showTimeSelectOnly
@@ -216,13 +250,27 @@ export default function CreateListing() {
                 </div>
                 <div className="flex flex-col">
                   <label className="leading-loose">Slots</label>
+                  <p className="text-sm font-normal text-red-500">
+                    {errors.slots}
+                  </p>
                   <input
                     type="number"
                     className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                     placeholder="Slots"
                     min={1}
                     onChange={(e) => {
-                      setSlots(e.target.value);
+                      let val = e.target.value;
+                      if(val == null || val <= 0) {
+                        setErrors({
+                          ...errors,
+                          slots: "Atleast 1 slot required",
+                        });
+                      } else {
+                        const newError = { ...errors };
+                        delete newError.slots
+                        setErrors(newError);
+                      }
+                      setSlots(val);
                     }}
                   />
                 </div>
@@ -336,7 +384,7 @@ export default function CreateListing() {
                 </button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </section>
