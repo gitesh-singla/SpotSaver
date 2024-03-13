@@ -196,7 +196,7 @@ export default function SpotInfo({ spot }) {
                 <DatePicker
                   selected={endTiming}
                   onChange={(date) => setEndTiming(date)}
-                  minTime={startTiming}
+                  minTime={new Date().setHours(startTiming.getHours())}
                   maxTime={new Date().setHours(23)}
                   showTimeSelect
                   showTimeSelectOnly

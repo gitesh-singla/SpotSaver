@@ -17,7 +17,7 @@ const changePassword = async (req, res) => {
                 await userExists.save();
                 res.cookie('authToken', '').send("password changed");
             } else {
-                throw ("incorrect password");
+                throw ("Incorrect password");
             }
         } else {
             throw ("user not found");
