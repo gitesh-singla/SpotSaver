@@ -15,10 +15,12 @@ const book = async (req, res) => {
         }
         const spotExists = await Spots.findOne({ _id: spot });
         if (spotExists) {
-            const { slots, status } = spotExists;
-            const available = await checkAvailability(spot, slots, status,  start, end);
+            const { slots, status, price } = spotExists;
+            const calculatedAmount = price * Math.abs(new Date(end).getHours() - new Date(start).getHours());
+            if (calculatedAmount != amount) throw "Invalid amount, request tampered";
+            const available = await checkAvailability(spot, slots, status, start, end);
             if (available) {
-                const bookingInfo = await Bookings.create({
+                await Bookings.create({
                     spot,
                     createdAt: new Date(),
                     client: jwtResponse._id,
@@ -28,7 +30,7 @@ const book = async (req, res) => {
                     amount,
                     reviewed: false,
                 })
-                res.json(bookingInfo)
+                res.send("Success")
             } else {
                 throw ("Spot unavailable at requested time.");
             }
