@@ -9,7 +9,7 @@ const editSpot = async (req, res) => {
         const spot = await Spots.findById(spotID);
         if(!spot) throw ("Spot not found");
         if(spot.owner != jwtResponse._id) throw ("Invalid Owner");
-        if(price < 0 || slots < 1 || startTiming >= endTiming) throw ("Invalid Data");
+        if(startTiming >= endTiming) throw ("Invalid Data");
 
         spot.price = price;
         spot.slots = slots;

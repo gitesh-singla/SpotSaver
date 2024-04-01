@@ -7,7 +7,7 @@ const ratingSchema = new Schema({
     booking: {type: mongoose.Schema.Types.ObjectId, ref: 'bookings', required: true},
     name: {type: String, required: true},
     review: {type: String},
-    rating: {type: Number, required: true},
+    rating: {type: Number, min: 0, max: 5,  required: true},
     createdAt: {type: Date, required: true},
 })
 
