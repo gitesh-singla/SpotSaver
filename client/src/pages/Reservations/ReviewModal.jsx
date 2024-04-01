@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 
 export default function ReviewModal({setReviewModalOpen, reservation_id, spot_id}) {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(1);
   const [review, setReview] = useState("");
 
 

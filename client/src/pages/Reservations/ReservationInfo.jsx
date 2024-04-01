@@ -83,26 +83,24 @@ export default function ReservationInfo({ reservation }) {
           </span>
         </h2>
         {!confirm && reservation.status == "active" && (
-          <>
-            <button
-              id={"cancel" + reservation._id}
-              className="bg-red-500 mt-6 text-white text-xl px-4 py-1 rounded-full hover:bg-red-600 active:scale-95 transition duration-200"
-              onClick={() => {
-                setConfirm(true);
-              }}
-              disabled={reservation.status != "active"}
-            >
-              Cancel
-            </button>
-            {reservation.status == "completed" && !reservation.reviewed && (
-              <button
-                className="bg-gray mt-2 ml-2 text-white text-xl px-4 py-1 rounded-full hover:bg-lightgray active:scale-95 transition duration-200"
-                onClick={() => setReviewModalOpen(true)}
-              >
-                Add Review
-              </button>
-            )}
-          </>
+          <button
+            id={"cancel" + reservation._id}
+            className="bg-red-500 mt-6 text-white text-xl px-4 py-1 rounded-full hover:bg-red-600 active:scale-95 transition duration-200"
+            onClick={() => {
+              setConfirm(true);
+            }}
+            disabled={reservation.status != "active"}
+          >
+            Cancel
+          </button>
+        )}
+        {reservation.status == "completed" && !reservation.reviewed && (
+          <button
+            className="bg-gray mt-2 ml-2 text-white text-xl px-4 py-1 rounded-full hover:bg-lightgray active:scale-95 transition duration-200"
+            onClick={() => setReviewModalOpen(true)}
+          >
+            Add Review
+          </button>
         )}
 
         {confirm && (
@@ -125,7 +123,13 @@ export default function ReservationInfo({ reservation }) {
           </div>
         )}
       </div>
-      {reviewModalOpen && <ReviewModal setReviewModalOpen={setReviewModalOpen} reservation_id={reservation._id} spot_id={reservation.spot}/>}
+      {reviewModalOpen && (
+        <ReviewModal
+          setReviewModalOpen={setReviewModalOpen}
+          reservation_id={reservation._id}
+          spot_id={reservation.spot}
+        />
+      )}
     </>
   );
 }

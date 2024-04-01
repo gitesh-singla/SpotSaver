@@ -12,6 +12,7 @@ function Listings() {
   const [pincode, setPincode] = useState();
   const [pinSearch, setPinSearch] = useState(true);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [sortCriteria, setSortCritera] = useState('d');
 
   const { lat, setLat, lon, setLon } = useContext(userContext);
   const { startTime, endTime } = useContext(DateContext);
@@ -22,8 +23,28 @@ function Listings() {
 
   useEffect(() => {
     if (!lat || !lon) getLocation();
-    coordinatesToCity(lat, lon);
+    coordinatesToCity(lat, lon); // to set city when page remounts
   }, []);
+
+
+  function sortByDistance(spots) {
+    const arr = [...spots].sort((a, b) => {
+      return a.distance > b.distance ? 1 : -1;
+    });
+    setSpots(arr);
+  }
+  function sortByPrice(spots) {
+    const arr = [...spots].sort((a, b) => {
+      return a.price > b.price ? 1 : -1;
+    });
+    setSpots(arr);
+  }
+  function sortByRating(spots) {
+    const arr = [...spots].sort((a, b) => {
+      return a.rating < b.rating ? 1 : -1;
+    });
+    setSpots(arr);
+  }
 
   function getLocation() {
     if ("geolocation" in navigator) {
@@ -76,7 +97,7 @@ function Listings() {
     setLat(+data[0].lat);
     setLon(+data[0].lon);
     await coordinatesToCity(data[0].lat, data[0].lon);
-    setPinSearch(!pinSearch)
+    setPinSearch(!pinSearch);
   }
 
   async function searchSpots() {
@@ -88,41 +109,17 @@ function Listings() {
     const { data } = await axios.get(
       `http://localhost:4000/listings?lat=${lat}&lon=${lon}&city=${city}&startTime=${start}&endTime=${end}`
     );
-    setSpots(data);
-  }
-
-  function sortByDistance() {
-    const arr = [...spots].sort((a, b) => {
-      return a.distance > b.distance ? 1 : -1;
-    });
-    setSpots(arr);
-  }
-  function sortByPrice() {
-    const arr = [...spots].sort((a, b) => {
-      return a.price > b.price ? 1 : -1;
-    });
-    setSpots(arr);
-  }
-  function sortByRating() {
-    const arr = [...spots].sort((a, b) => {
-      return a.rating < b.rating ? 1 : -1;
-    });
-    setSpots(arr);
+    if(sortCriteria == 'd') sortByDistance(data);
+    if(sortCriteria == 'p') sortByPrice(data);
+    if(sortCriteria == 'r') sortByRating(data);
   }
 
   function handleKeyPincode(event) {
-    if(event.key == 'Enter') getpinLoaction();
+    if (event.key == "Enter") getpinLoaction();
   }
 
   return (
-    <div className="flex-1 flex items-stretch">
-      {/* filter */}
-      {/* <div className="filter fixed bottom-0 left-0 z-30 m-[1.25em] block w-[70%]">
-            <button className="py-[0.625em] px-[2.5em] rounded-md flex items-center bg-[#2963a3] text-white my-0 mx-auto shadow-sh shadow-lg">
-              <img className="h-6" src="filter-svg.svg" />
-              <div className="text-2xl pl-[0.25em]">Filter</div>
-            </button>
-          </div> */}
+    <div className="flex-1 flex items-stretch" style={{maxHeight: "calc(100vh - 124px)"}}>
       <div id="map-sec" className="flex-1 relative">
         <Map
           spots={spots}
@@ -131,7 +128,7 @@ function Listings() {
           hoveredIndex={hoveredIndex}
         />
         <div className="Search absolute top-2 left-14 flex flex-col bg-primary rounded-md shadow-sh z-10 text-white">
-          <RangeModifier modifySearch={searchSpots}/>
+          <RangeModifier modifySearch={searchSpots} />
           <div className="Search-details p-2 px-4 flex felx-col gap-4 items-center justify-center">
             <button
               className="bg-white p-2 rounded-full hover:scale-105 active:scale-100"
@@ -164,28 +161,37 @@ function Listings() {
         </div>
       </div>
 
-      <div id="list-sec" className="max-w-md min-w-[400px] flex-1">
+      <div id="list-sec" className="max-w-md min-w-[400px] flex-1 max-h-full">
         <ul className="flex justify-around gap-4 p-2 bg-white shadow-sh">
           <li
-            className="text-xl  text-[#999999] cursor-pointer"
-            onClick={sortByDistance}
+            className={`text-xl cursor-pointer ${sortCriteria == 'd' ? "text-gray" : "text-lightgray"}`}
+            onClick={() => {
+              setSortCritera('d');
+              sortByDistance(spots);
+            }}
           >
             Distance
           </li>
           <li
-            className="text-xl  text-[#999999] cursor-pointer"
-            onClick={sortByPrice}
+            className={`text-xl cursor-pointer ${sortCriteria == 'p' ? "text-gray" : "text-lightgray"}`}
+            onClick={() => {
+              setSortCritera('p');
+              sortByPrice(spots);
+            }}
           >
             Price
           </li>
           <li
-            className="text-xl  text-[#999999] cursor-pointer"
-            onClick={sortByRating}
+            className={`text-xl cursor-pointer ${sortCriteria == 'r' ? "text-gray" : "text-lightgray"}`}
+            onClick={() => {
+              setSortCritera('r');
+              sortByRating(spots);
+            }}
           >
             Rating
           </li>
         </ul>
-        <div className="listing-cards overflow-y-auto p-4">
+        <div className="listing-cards overflow-y-auto p-4" style={{maxHeight: "calc(100% - 44px)"}}>
           {spots &&
             spots.map((spot, index) => {
               return (
@@ -203,7 +209,7 @@ function Listings() {
                 />
               );
             })}
-          {(!spots || spots.length == 0) && <h3>No spots available</h3>}
+          {(!spots || spots.length == 0) && <h3 className="text-center text-lightgray">No spots available</h3>}
         </div>
       </div>
     </div>
