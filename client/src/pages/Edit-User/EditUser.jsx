@@ -68,7 +68,7 @@ export default function EditUser() {
 
   return (
     <section className="section-container">
-      <div className="max-w-content w-full mt-8 border-x-2 border-dark px-8">
+      <div className="max-w-content w-full mt-8 border-x-2 border-dark px-8 mb-8">
         <div className="flex justify-between items-center  mb-8">
           <h1 className="text-2xl font-semibold">Edit: </h1>
           <button

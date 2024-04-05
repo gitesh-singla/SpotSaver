@@ -21,19 +21,23 @@ export default function Profile() {
     }
   }
 
-  function handleEdit () {
+  function handleEdit() {
     navigate("edit-user");
   }
 
   return (
     <section className="section-container">
-      <div className="max-w-content w-full mt-8 border-x-2 border-dark px-8">
+      <div className="max-w-content w-full mt-8 border-x-2 border-dark px-8 mb-8">
         <div className="flex justify-between items-center  mb-8">
           <h1 className="text-2xl font-semibold">Profile:</h1>
-          <button className="py-2 px-4 text-lg bg-primary text-white font-semibold rounded hover:bg-secondary active:scale-95 transition duration-200"
-          onClick={handleEdit}>Edit</button>
+          <button
+            className="py-2 px-4 text-lg bg-primary text-white font-semibold rounded hover:bg-secondary active:scale-95 transition duration-200"
+            onClick={handleEdit}
+          >
+            Edit
+          </button>
         </div>
-        <div className="flex flex-col mb-4">  
+        <div className="flex flex-col mb-4">
           <label className="leading-loose">Email: </label>
           <input
             type="text"
@@ -64,7 +68,7 @@ export default function Profile() {
           />
         </div>
         <button
-          className="bg-primary px-6 py-2 rounded-lg block mx-auto"
+          className="py-2 px-4 text-lg bg-secondary text-white font-semibold rounded hover:bg-primary active:scale-95 transition duration-200"
           onClick={logout}
         >
           Logout

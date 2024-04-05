@@ -14,6 +14,7 @@ import { useContext } from "react";
 import MySpots from "./pages/MySpots/MySpots";
 import Reservations from "./pages/Reservations/Reservations";
 import EditUser from "./pages/Edit-User/EditUser";
+import Footer from "./components/Footer";
 
 function App() {
   const { ready } = useContext(userContext);
@@ -35,6 +36,7 @@ function App() {
           <Route path="/listing/:id" element={<ListingPage />}></Route>
         </Routes>
       )}
+      <Footer/>
     </>
   );
 }

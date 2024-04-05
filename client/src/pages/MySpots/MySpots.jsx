@@ -37,8 +37,8 @@ export default function MySpots() {
 
   return (
     <section className="section-container">
-      <div className="mt-8 flex flex-col items-center px-8 gap-4 max-w-content w-full">
-        <h1 className="text-2xl font-bold">My Listings:</h1>
+      <div className="mt-8 flex flex-col items-center px-8 gap-4 max-w-content w-full mb-4">
+        <h1 className="text-2xl text-gray font-bold">My Listings:</h1>
         {spots.length > 0 &&
           spots.map((spot) => {
             return <SpotInfo key={spot._id} spot={spot} />;
