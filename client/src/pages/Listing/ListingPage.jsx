@@ -11,6 +11,7 @@ import Images from "./Images";
 export default function ListingPage() {
   const { id } = useParams();
   const [spot, setSpot] = useState(null);
+  const [amenities, setAmenities] = useState(null);
 
   const { lat, lon, setLat, setLon } = useContext(userContext);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
@@ -33,10 +34,13 @@ export default function ListingPage() {
   }, [lat, lon]);
 
   const url = `http://localhost:4000/listing?id=${id}&lat=${lat}&lon=${lon}`;
+  const urlAmenities = `http://localhost:4000/amenities?id=${id}`;
 
   async function getData() {
     try {
       const { data } = await axios.get(url);
+      const {data: amenitesData} = await axios.get(urlAmenities);
+      setAmenities(amenitesData);
       setSpot(data);
     } catch (error) {
       console.log("in getData()", error.message);
@@ -98,6 +102,7 @@ export default function ListingPage() {
               coordinates={spot.coordinates?.map((coord) => {
                 return [coord[1], coord[0]];
               })}
+              amenities = {amenities}
             />
           )}
           <ReviewSection />
