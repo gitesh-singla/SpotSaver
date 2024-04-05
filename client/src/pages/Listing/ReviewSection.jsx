@@ -12,7 +12,6 @@ export default function ReviewSection() {
       .get(`http://localhost:4000/getreviews?id=${id}`)
       .then(({ data }) => {
         setRatings(data);
-        console.log(ratings);
       })
       .catch((error) => {
         console.log(error.message);

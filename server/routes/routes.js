@@ -19,6 +19,7 @@ const changePassword = require("../controllers/changePassword");
 const cancelReservation = require("../controllers/cancelReservation");
 const editSpot = require("../controllers/editSpot");
 const deleteSpot = require("../controllers/deleteSpot");
+const getAmenities = require("../controllers/getAmenities");
 
 router.post("/login", login);
 router.post("/register", register);
@@ -27,6 +28,7 @@ router.post("/logout", logout);
 router.post("/addlisting", useAuth, upload.array('spotImages'), addlisting);
 router.get("/listings", getListings);
 router.get("/listing/", getSpot);
+router.get("/amenities/", getAmenities);
 router.post("/book", useAuth, book);
 router.get("/myspots", useAuth, mySpots);
 router.get("/reservations", useAuth, reservations);
