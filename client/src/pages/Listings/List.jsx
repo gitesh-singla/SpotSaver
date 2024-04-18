@@ -4,6 +4,7 @@ function List({
   distance,
   address,
   _id,
+  type,
   slots,
   price,
   rating,
@@ -34,7 +35,7 @@ function List({
             {address}
           </div>
           <div className="list-card-spots text-lg  font-semibold">
-            {slots} spots
+            {type.charAt(0).toUpperCase() + type.slice(1)}
           </div>
         </div>
         <div className="list-card-detail flex justify-around text-dark">

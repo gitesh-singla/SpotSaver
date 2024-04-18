@@ -1,11 +1,8 @@
 import { Link } from "react-router-dom";
 import RangePicker from "./RangePicker";
-import { useContext } from "react";
-import { DateContext } from "../../Contexts/DateContext";
+import arrowImg from "/direction-arrow.svg";
 
 export default function HomePage() {
-  const { startTime, endTime } = useContext(DateContext);
-
   return (
     <section
       className="section-container bg-bottom bg-contain bg-no-repeat mt-6 noselect"
@@ -37,7 +34,7 @@ export default function HomePage() {
             className="flex items-center justify-center px-8 py-4 bg-primary shadow-xl rounded-full mt-1 mb-4  hover:scale-105 active:scale-100 transition duration-200"
             to={"/listings"}
           >
-            <img className="h-8" src="./direction-arrow.svg" alt="" />
+            <img className="h-8" src={arrowImg} alt="#" />
             <p className="text-2xl font-bold text-white pl-4">
               Find parking near me!
             </p>

@@ -7,6 +7,12 @@ import { FadeLoader } from "react-spinners";
 import Booking from "./Booking";
 import ReviewSection from "./ReviewSection";
 import Images from "./Images";
+import phoneSVG from "/phone.svg";
+import starSVG from "/star.svg";
+import stopSVG from "/stop.svg";
+import carSVG from "/car.svg";
+import clockSVG from "/clock.svg";
+import distanceSVG from "/distance.svg";
 
 export default function ListingPage() {
   const { id } = useParams();
@@ -58,22 +64,22 @@ export default function ListingPage() {
           <div className="bg-secondary h-2 mb-4"></div>
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center">
-              <img src="/phone.svg" alt="#" width={"20px"} />
+              <img src={phoneSVG} alt="#" width={"20px"} />
               <h2>{spot.phone}</h2>
             </div>
             <div className="flex gap-1 items-center">
-              <img src="/star.svg" alt="#" width={"24px"} />
+              <img src={starSVG} alt="#" width={"24px"} />
               <h2>{spot.rating} <a href="#reviews" className="underline">({spot.ratingCount} ratings)</a></h2>
             </div>
           </div>
           <div className="booking-detail gap-4 mt-4 flex mb-8">
             <div className="spot-detail flex-1">
               <div className="flex gap-2 items-center">
-                <img src="/stop.svg" alt="#" width={"40px"} />
+                <img src={stopSVG} alt="#" width={"40px"} />
                 <h2 className="text-xl">{spot.slots} total spots</h2>
               </div>
               <div className="flex gap-2 items-center">
-                <img src="/car.svg" alt="#" width={"40px"} />
+                <img src={carSVG} alt="#" width={"40px"} />
                 <h2 className="text-xl">{spot.type} vehicles allowed</h2>
               </div>
               <h2 className="text-lg max-h-36 h-40 text-ellipsis mt-2">
@@ -87,11 +93,11 @@ export default function ListingPage() {
           <div className="h-[2px] bg-gray mb-4"></div>
           <div className="flex gap-4 items-center font-semibold text-lg mb-4">
             <div className="flex gap-2 items-center">
-              <img src="/clock.svg" alt="#" width={"30px"} />
+              <img src={clockSVG} alt="#" width={"30px"} />
               <h2>{Math.round(spot.duration / 60)}min</h2>
             </div>
             <div className="flex gap-1 items-center">
-              <img src="/distance.svg" alt="#" width={"30px"} />
+              <img src={distanceSVG} alt="#" width={"30px"} />
               <h2>{(spot.distance / 1000).toFixed(2)} Km</h2>
             </div>
           </div>
