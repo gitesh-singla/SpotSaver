@@ -110,7 +110,7 @@ function Listings() {
     let end = new Date(endTime);
     end = end.toISOString();
     const { data } = await axios.get(
-      `http://localhost:4000/listings?lat=${lat}&lon=${lon}&city=${city}&startTime=${start}&endTime=${end}`
+      `/listings?lat=${lat}&lon=${lon}&city=${city}&startTime=${start}&endTime=${end}`
     );
     if(sortCriteria == 'd') sortByDistance(data);
     if(sortCriteria == 'p') sortByPrice(data);

@@ -12,7 +12,7 @@ export default function Reservations() {
 
   async function getReservations() {
     try {
-      const { data } = await axios.get("http://localhost:4000/reservations", {
+      const { data } = await axios.get("/reservations", {
         withCredentials: true,
       });
       const dateSorted = data.sort((a, b) => {

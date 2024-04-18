@@ -14,7 +14,7 @@ export default function Profile() {
 
   function logout() {
     try {
-      axios.post("http://localhost:4000/logout", {}, { withCredentials: true });
+      axios.post("/logout", {}, { withCredentials: true });
       setUser(null);
     } catch (error) {
       console.log(error.message);

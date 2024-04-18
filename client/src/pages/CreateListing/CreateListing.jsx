@@ -69,7 +69,7 @@ export default function CreateListing() {
     try {
       if (Object.keys(validate).length != 0) throw "Invalid input";
 
-      await axios.post("http://localhost:4000/addlisting", formData, {
+      await axios.post("/addlisting", formData, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",

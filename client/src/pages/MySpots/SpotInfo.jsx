@@ -48,7 +48,7 @@ export default function SpotInfo({ spot }) {
     setShowLoading(true)
     const patchData = {price, slots, status: statusSwitch, startTiming, endTiming}
     try {
-      await axios.patch(`http://localhost:4000/editspot?spotID=${spot._id}`, patchData, {withCredentials: true});
+      await axios.patch(`/editspot?spotID=${spot._id}`, patchData, {withCredentials: true});
       window.location.reload();
     } catch(error) {
       console.log(error.response);
@@ -61,7 +61,7 @@ export default function SpotInfo({ spot }) {
   async function handleDeleteSpot() {
     setShowLoading(true)
     try {
-      await axios.delete(`http://localhost:4000/deletespot?spotID=${spot._id}`, {withCredentials: true});
+      await axios.delete(`/deletespot?spotID=${spot._id}`, {withCredentials: true});
       window.location.reload();
     } catch(error) {
       console.log(error.response);
