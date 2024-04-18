@@ -39,8 +39,8 @@ export default function ListingPage() {
     getData();
   }, [lat, lon]);
 
-  const url = `http://localhost:4000/listing?id=${id}&lat=${lat}&lon=${lon}`;
-  const urlAmenities = `http://localhost:4000/amenities?id=${id}`;
+  const url = `/listing?id=${id}&lat=${lat}&lon=${lon}`;
+  const urlAmenities = `/amenities?id=${id}`;
 
   async function getData() {
     try {
