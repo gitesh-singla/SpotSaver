@@ -9,7 +9,7 @@ export default function ReviewSection() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/getreviews?id=${id}`)
+      .get(`/getreviews?id=${id}`)
       .then(({ data }) => {
         setRatings(data);
       })

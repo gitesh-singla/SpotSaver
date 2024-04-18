@@ -15,7 +15,7 @@ export default function LoginPage() {
   async function handleLogin(dataToSend) {
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/login",
+        "/login",
         dataToSend,
         { withCredentials: true }
       );

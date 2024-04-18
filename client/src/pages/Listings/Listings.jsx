@@ -5,6 +5,9 @@ import axios from "axios";
 import { userContext } from "../../Contexts/UserContext";
 import { DateContext } from "../../Contexts/DateContext";
 import RangeModifier from "./RangeModifier";
+import searchSVG from "/search-svg.svg";
+import locationSVG from "/location-svg.svg";
+
 
 function Listings() {
   const [spots, setSpots] = useState([]);
@@ -107,7 +110,7 @@ function Listings() {
     let end = new Date(endTime);
     end = end.toISOString();
     const { data } = await axios.get(
-      `http://localhost:4000/listings?lat=${lat}&lon=${lon}&city=${city}&startTime=${start}&endTime=${end}`
+      `/listings?lat=${lat}&lon=${lon}&city=${city}&startTime=${start}&endTime=${end}`
     );
     if(sortCriteria == 'd') sortByDistance(data);
     if(sortCriteria == 'p') sortByPrice(data);
@@ -136,7 +139,7 @@ function Listings() {
             >
               <img
                 className="h-[1.25rem]  flex justify-between "
-                src="/location-svg.svg"
+                src={locationSVG}
                 alt="#"
               />
             </button>
@@ -155,7 +158,7 @@ function Listings() {
               className="Search-button bg-white p-2 rounded-full shadow-lg hover:scale-105 active:scale-100"
               onClick={getpinLoaction}
             >
-              <img className="h-[1.25rem]" src="/search-svg.svg" alt="#" />
+              <img className="h-[1.25rem]" src={searchSVG} alt="#" />
             </button>
           </div>
         </div>
@@ -203,6 +206,7 @@ function Listings() {
                   key={spot._id}
                   price={spot.price}
                   rating={spot.rating}
+                  type={spot.type}
                   hoveredIndex={hoveredIndex}
                   setHoveredIndex={setHoveredIndex}
                   index={index}

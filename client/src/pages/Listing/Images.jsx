@@ -27,7 +27,7 @@ export default function Images({ images, isViewerOpen, setIsViewerOpen }) {
             <img
               src={src}
               onClick={() => openImageViewer(index)}
-              className="max-w-[152px] max-h-[128px]"
+              className="max-w-[152px] max-h-[128px] cursor-pointer"
               key={index}
               style={{ margin: "2px" }}
               alt=""

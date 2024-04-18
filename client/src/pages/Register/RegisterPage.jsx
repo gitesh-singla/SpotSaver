@@ -14,7 +14,7 @@ export default function RegisterPage() {
 
   async function handleRegister(dataToSend) {
     try {
-      await axios.post("http://localhost:4000/register", dataToSend);
+      await axios.post("/register", dataToSend);
       setRedirect(true);
     } catch (error) {
       alert("Registration Failed");

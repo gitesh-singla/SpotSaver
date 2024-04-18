@@ -12,7 +12,7 @@ export default function MySpots() {
 
   async function getSpots() {
     try {
-      const { data } = await axios.get("http://localhost:4000/myspots", {
+      const { data } = await axios.get("/myspots", {
         withCredentials: true,
       });
       setSpots(data);

@@ -12,7 +12,7 @@ export function UserContextProvider({ children }) {
   useEffect(() => {
     console.log("useEffect");
     axios
-      .get("http://localhost:4000/auth", { withCredentials: true })
+      .get("/auth", { withCredentials: true })
       .then(({ data }) => {
         setUser(data);
         setReady(true);

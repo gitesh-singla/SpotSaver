@@ -33,7 +33,7 @@ export default function Booking({ price }) {
         end,
         amount: cost,
       };
-      await axios.post("http://localhost:4000/book", bookingData, {
+      await axios.post("/book", bookingData, {
         withCredentials: true,
       });
       console.log("Booked");

@@ -15,6 +15,9 @@ import MySpots from "./pages/MySpots/MySpots";
 import Reservations from "./pages/Reservations/Reservations";
 import EditUser from "./pages/Edit-User/EditUser";
 import Footer from "./components/Footer";
+import axios from "axios";
+
+axios.defaults.baseURL = process.env.NODE_ENV == 'production' ? "prodling" : "http://localhost:4000";
 
 function App() {
   const { ready } = useContext(userContext);

@@ -3,6 +3,7 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { userContext } from "../../Contexts/UserContext";
 import DatePicker from "react-datepicker";
+import clockSVG from "/clock.svg";
 
 import "react-datepicker/dist/react-datepicker.css";
 import MapComponent from "./MapComponent";
@@ -68,7 +69,7 @@ export default function CreateListing() {
     try {
       if (Object.keys(validate).length != 0) throw "Invalid input";
 
-      await axios.post("http://localhost:4000/addlisting", formData, {
+      await axios.post("/addlisting", formData, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -206,7 +207,7 @@ export default function CreateListing() {
                         className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                       />
                       <img
-                        src="/clock.svg"
+                        src={clockSVG}
                         width={"20px"}
                         className="absolute left-3 top-2"
                       />
@@ -230,7 +231,7 @@ export default function CreateListing() {
                         className="pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                       />
                       <img
-                        src="/clock.svg"
+                        src={clockSVG}
                         width={"20px"}
                         className="absolute left-3 top-2"
                       />

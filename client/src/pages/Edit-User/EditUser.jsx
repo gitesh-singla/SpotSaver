@@ -36,7 +36,7 @@ export default function EditUser() {
       if (!changePassword) {
         if (nameEdit == "" || phoneEdit == "") throw "Name or Phone missing!";
         await axios.patch(
-          "http://localhost:4000/edituser",
+          "/edituser",
           { name: nameEdit, phone: phoneEdit },
           { withCredentials: true }
         );

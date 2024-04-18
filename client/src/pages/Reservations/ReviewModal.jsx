@@ -15,7 +15,7 @@ export default function ReviewModal({setReviewModalOpen, reservation_id, spot_id
   const handleSubmit = async () => {
     try {
       await axios.post(
-        "http://localhost:4000/addreview",
+        "/addreview",
         { rating, review, spot_id, reservation_id },
         { withCredentials: true }
       );

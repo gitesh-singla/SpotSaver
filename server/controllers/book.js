@@ -7,10 +7,10 @@ const book = async (req, res) => {
     const { spot, start, end, amount } = req.body;
     const { jwtResponse } = req;
     try {
-        if (!spot || !start || !end || start >= end) {
+        if (!spot || !start || !end || new Date(start) >= new Date(end)) {
             throw ("Invalid request");
         }
-        if (start > new Date().setDate(new Date().getDate() + 6) || start < new Date()) {
+        if (new Date(start) > new Date().setDate(new Date().getDate() + 6) || new Date(start) < new Date()) {
             throw ("Invalid request");
         }
         const spotExists = await Spots.findOne({ _id: spot });

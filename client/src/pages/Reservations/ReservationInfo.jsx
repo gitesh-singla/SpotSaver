@@ -44,7 +44,7 @@ export default function ReservationInfo({ reservation }) {
   const handleCancel = async () => {
     try {
       await axios.delete(
-        `http://localhost:4000/cancelreservation?bookingID=${reservation._id}`,
+        `/cancelreservation?bookingID=${reservation._id}`,
         { withCredentials: true }
       );
       window.location.reload();
