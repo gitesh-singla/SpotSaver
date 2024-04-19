@@ -1,4 +1,5 @@
 const Spots = require("../models/Spots");
+const errorLogger = require("../utils/errorLogger");
 
 const editSpot = async (req, res) => {
     const {jwtResponse} = req;
@@ -22,6 +23,8 @@ const editSpot = async (req, res) => {
         res.send("Spot Updated.");
     } catch(error){
         console.log(error, "in editSpot");
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(400).send(error);
     }
 }

@@ -1,6 +1,7 @@
 const Spots = require("../models/Spots");
 const calculateDistance = require("../utils/calculateDistance");
 const checkAvailability = require("../utils/checkAvailability");
+const errorLogger = require("../utils/errorLogger");
 
 const getListings = async (req, res) => {
     try {
@@ -19,6 +20,8 @@ const getListings = async (req, res) => {
         res.json(spots)
     } catch (error) {
         console.log(error);
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(402).json(error);
     }
 }

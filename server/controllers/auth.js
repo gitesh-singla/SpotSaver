@@ -1,4 +1,5 @@
-const Users = require('../models/Users')
+const Users = require('../models/Users');
+const errorLogger = require('../utils/errorLogger');
 
 const auth = async (req, res) => {
     const { jwtResponse } = req;
@@ -7,6 +8,8 @@ const auth = async (req, res) => {
         res.json({ name, email, _id, phone });
     } catch (error) {
         console.log(error)
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(422).json(error.message)
     }
 }

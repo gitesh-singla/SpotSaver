@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const Users = require('../models/Users')
+const errorLogger = require('../utils/errorLogger')
 const bcryptSalt = bcrypt.genSaltSync(10)
 
 const register = async (req, res) => {
@@ -20,6 +21,8 @@ const register = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(422).json(error)
     }
 }

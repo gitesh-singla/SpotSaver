@@ -1,5 +1,6 @@
 const Users = require("../models/Users");
 const bcrypt = require('bcrypt');
+const errorLogger = require("../utils/errorLogger");
 const bcryptSalt = bcrypt.genSaltSync(10)
 
 const changePassword = async (req, res) => {
@@ -24,6 +25,8 @@ const changePassword = async (req, res) => {
         }
     } catch (error) {
         console.log(error, "in changePassword");
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(400).send(error);
     }
 }
