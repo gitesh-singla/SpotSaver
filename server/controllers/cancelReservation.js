@@ -1,4 +1,5 @@
 const Bookings = require("../models/Bookings");
+const errorLogger = require("../utils/errorLogger");
 
 const cancelReservation = async (req, res) => {
     const { bookingID } = req.query;
@@ -15,6 +16,8 @@ const cancelReservation = async (req, res) => {
         res.send("Booking Cancelled");
     } catch (error) {
         console.log(error, "in cancelReservation");
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(400).send(error);
     }
 }

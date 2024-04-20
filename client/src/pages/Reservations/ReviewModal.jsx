@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 
 export default function ReviewModal({setReviewModalOpen, reservation_id, spot_id}) {

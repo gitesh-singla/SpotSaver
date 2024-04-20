@@ -1,6 +1,7 @@
 const Spots = require("../models/Spots");
 const Bookings = require("../models/Bookings");
 const checkAvailability = require("../utils/checkAvailability");
+const errorLogger = require("../utils/errorLogger");
 
 
 const book = async (req, res) => {
@@ -39,6 +40,8 @@ const book = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(422).json(error)
     }
 }

@@ -1,5 +1,6 @@
 const Users = require("../models/Users");
 const jwt = require('jsonwebtoken');
+const errorLogger = require("../utils/errorLogger");
 const jwtKey = process.env.JWT_KEY
 
 
@@ -22,6 +23,8 @@ const editUser = async (req, res) => {
         );
     } catch (error) {
         console.log(error, "in editUser");
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(400).send(error);
     }
 }

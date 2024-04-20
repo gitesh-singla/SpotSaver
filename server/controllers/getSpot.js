@@ -1,6 +1,7 @@
 const axios = require("axios");
 const Spots = require("../models/Spots");
 const Users = require("../models/Users");
+const errorLogger = require("../utils/errorLogger");
 
 const getSpot = async (req, res) => {
     const { id, lat, lon } = req.query
@@ -19,6 +20,8 @@ const getSpot = async (req, res) => {
         }
         res.json(response)
     } catch (error) {
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(422).json(error.message)
     }
 }

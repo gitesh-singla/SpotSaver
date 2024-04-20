@@ -1,6 +1,7 @@
 const Ratings = require("../models/Ratings");
 const Spots = require("../models/Spots");
 const Bookings = require("../models/Bookings");
+const errorLogger = require("../utils/errorLogger");
 
 const addReview = async (req, res) => {
     const { jwtResponse } = req;
@@ -35,6 +36,8 @@ const addReview = async (req, res) => {
         res.json("Review added.");
     } catch (error) {
         console.log(error, "in addreview");
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(400).json(error);
     }
 }

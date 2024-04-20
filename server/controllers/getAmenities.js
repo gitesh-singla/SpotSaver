@@ -1,5 +1,6 @@
 const Spots = require("../models/Spots");
 const Amenities = require("../models/Amenities");
+const errorLogger = require("../utils/errorLogger");
 
 const getAmenities = async (req, res) => {
     try {
@@ -15,6 +16,8 @@ const getAmenities = async (req, res) => {
 
     } catch (error) {
         console.log(error);
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(400).json(error);
     }
 }

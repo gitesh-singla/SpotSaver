@@ -1,5 +1,6 @@
 const Bookings = require("../models/Bookings");
 const Spots = require("../models/Spots");
+const errorLogger = require("../utils/errorLogger");
 
 const reservations = async (req, res) => {
     const { jwtResponse } = req;
@@ -18,6 +19,8 @@ const reservations = async (req, res) => {
         res.json(resInfo)
     } catch (error) {
         console.log(error);
+        const errorLog = `At route ${req.url} ${error}`;
+        errorLogger(errorLog);
         res.status(422).json(error.message)
     }
 }
