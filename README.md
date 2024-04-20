@@ -45,7 +45,7 @@ To get started with SpotSaver, follow these steps:
 
     - In the `server` directory, create a `.env` file with the following environment variables:
         - `MONGO_URI`: Your MongoDB connection URI.
-        - `PORT`: The port number to run the server on.
+        - `PORT`: The port number to run the server on. Set to 4000
         - `ORS_API_KEY`: Your OpenRouteService API key.
         - `JWT_KEY`: Your JWT secret key.
 
