@@ -23,8 +23,8 @@ reservationStatusScheduler.start();
 async function runMongo() {
     try {
         mongoose.connect(process.env.MONGO_URI)
-        app.listen('4000')
-        console.log("listening in 4000")
+        app.listen(process.env.PORT)
+        console.log(`Listening on port ${process.env.PORT}`)
     } catch (error) {
         console.log(error)
     }
