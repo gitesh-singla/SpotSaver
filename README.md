@@ -74,4 +74,4 @@ This project is licensed under the [MIT License](LICENSE). See the `LICENSE` fil
 
 ## Contact
 
-Reach out to us directly at [giteshsingla7@gmail.com](mailto:giteshsingla7@gmail.com).
+Reach out: [giteshsingla7@gmail.com](mailto:giteshsingla7@gmail.com).
